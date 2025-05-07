@@ -25,6 +25,7 @@ import BlogPost from "@/pages/blog-post";
 import Contact from "@/pages/contact";
 import FAQ from "@/pages/faq";
 import NotFound from "@/pages/not-found";
+import Donations from '@/pages/donations';
 
 // Shape the Future
 import Careers from "@/pages/careers";
@@ -155,6 +156,12 @@ function Router() {
       <Route path="/pages/admin/signup">
         <PublicLayout>
           <Signup />
+        </PublicLayout>
+      </Route>
+
+      <Route path="/donations">
+        <PublicLayout>
+          <Donations />
         </PublicLayout>
       </Route>
 
