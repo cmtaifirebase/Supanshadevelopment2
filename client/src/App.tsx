@@ -61,6 +61,8 @@ import Profile from "@/pages/admin/Profile";
 // Admin Layout
 import AdminLayout from "@/layouts/AdminLayout";
 
+import Events from '@/pages/event';
+import EventDetails from '@/pages/event-details';
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -123,6 +125,18 @@ function Router() {
           <BlogPost />
         </PublicLayout>
       </Route>
+
+      <Route path="/event">
+        <PublicLayout>
+          <Events />
+        </PublicLayout>
+      </Route>
+      <Route path="/event/:slug">
+        <PublicLayout>
+          <EventDetails />
+        </PublicLayout>
+      </Route>
+
       <Route path="/contact">
         <PublicLayout>
           <Contact />
@@ -305,6 +319,7 @@ function Router() {
           <NotFound />
         </PublicLayout>
       </Route>
+
     </Switch>
   );
 }

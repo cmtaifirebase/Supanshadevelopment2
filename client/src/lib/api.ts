@@ -595,7 +595,7 @@ interface DonationStats {
 
   // Fetch all events
   export const fetchEvents = async (): Promise<EventsResponse> => {
-    const res = await fetch(`${API_BASE_URL}/api/event`, {
+    const res = await fetch(`${API_BASE_URL}/api/event/admin`, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',

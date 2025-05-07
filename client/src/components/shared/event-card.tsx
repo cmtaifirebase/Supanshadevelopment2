@@ -1,50 +1,75 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { Event } from '@/lib/types';
 import { format } from 'date-fns';
+
+interface Location {
+  country?: string;
+  state?: string;
+  district?: string;
+  block?: string;
+  venueName?: string;
+  fullAddress?: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+interface Event {
+  _id: string;
+  organizerName: string;
+  organizationLogo?: string;
+  websiteLink?: string;
+  eventTitle: string;
+  slug: string;
+  eventDescription?: string;
+  eventType?: string;
+  themeFocusArea?: string;
+  objective?: string;
+  targetAudience?: string[];
+  expectedParticipants?: number;
+  startDateTime: string;
+  endDateTime?: string;
+  location?: Location;
+  totalPasses?: number;
+  isFreeEvent?: boolean;
+  autoAttendanceRequired?: boolean;
+  volunteerRolesNeeded?: string;
+  needVolunteers?: boolean;
+  sponsorRequirements?: string;
+  sponsorLogos?: string[];
+  eventPoster?: string;
+  eventDocuments?: string[];
+  approvalStatus: 'Draft' | 'Pending' | 'Approved';
+  displayOnWebsite: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface EventCardProps {
   event: Event;
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
-  const { id, title, location, date, description, image, video, status } = event;
-  
-  const formattedDate = format(new Date(date), 'MMMM d, yyyy');
+  const isUpcoming = new Date(event.startDateTime) > new Date();
+  const formattedDate = format(new Date(event.startDateTime), 'MMMM d, yyyy');
+  const locationText = event.location?.venueName || event.location?.fullAddress || 'Location TBA';
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      {video ? (
-        <div className="h-48 relative">
-          <video 
-            className="w-full h-full object-cover"
-            poster={image}
-            controls
-          >
-            <source src={video} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
-            Video
-          </div>
-        </div>
-      ) : (
-        <div 
-          className="h-48 bg-cover bg-center" 
-          style={{ backgroundImage: `url(${image})` }}
-        ></div>
-      )}
+      <div 
+        className="h-48 bg-cover bg-center" 
+        style={{ backgroundImage: `url(${event.eventPoster || 'https://via.placeholder.com/400x200'})` }}
+      />
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="font-montserrat font-semibold text-xl">{title}</h3>
-            <p className="text-gray-500 text-sm">{location}</p>
+            <h3 className="font-montserrat font-semibold text-xl">{event.eventTitle}</h3>
+            <p className="text-gray-500 text-sm">{locationText}</p>
           </div>
           <span className={`
             text-xs font-semibold px-2.5 py-0.5 rounded
-            ${status === 'upcoming' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}
+            ${isUpcoming ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}
           `}>
-            {status === 'upcoming' ? 'Upcoming' : 'Completed'}
+            {isUpcoming ? 'Upcoming' : 'Past'}
           </span>
         </div>
         <div className="flex items-center mb-4 text-sm text-gray-700">
@@ -53,9 +78,11 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           </svg>
           {formattedDate}
         </div>
-        <p className="text-gray-600 text-sm mb-4">{description}</p>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+          {event.eventDescription || event.objective || 'Join us for this exciting event!'}
+        </p>
         <Link 
-          href={`/event-details/${id}`} 
+          href={`/event/${event.slug}`} 
           className="inline-block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
         >
           View Details
