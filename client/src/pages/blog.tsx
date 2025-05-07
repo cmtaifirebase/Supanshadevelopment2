@@ -1,28 +1,65 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useQuery } from '@tanstack/react-query';
-import { BlogPost } from '@/lib/types';
+import { API_BASE_URL } from '@/config';
 import BlogCard from '@/components/shared/blog-card';
+
+interface BlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  category: string;
+  content: string;
+  status: 'Draft' | 'Review' | 'Published';
+  publishDate?: string;
+  metaDescription?: string;
+  seoKeywords?: string[];
+  tags?: string[];
+  estimatedReadTime: string;
+  authorId: string;
+  createdAt: string;
+  updatedAt: string;
+  audioRequired: boolean;
+}
+
+interface BlogsResponse {
+  success: boolean;
+  blogs: BlogPost[];
+}
 
 const Blog: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
-  const { data: blogPosts, isLoading } = useQuery<BlogPost[]>({
-    queryKey: ['/api/blog'],
+  const { data: blogResponse, isLoading } = useQuery<BlogsResponse>({
+    queryKey: ['blogs'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/blog`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch blogs');
+      }
+      return response.json();
+    },
   });
+
+  // Filter only published blogs
+  const publishedBlogs = blogResponse?.blogs?.filter((blog: BlogPost) => blog.status === 'Published') || [];
 
   const categories = [
     { id: 'all', name: 'All Posts' },
-    { id: 'Health', name: 'Health' },
+    { id: 'Healthcare', name: 'Healthcare' },
     { id: 'Education', name: 'Education' },
-    { id: 'Women\'s Empowerment', name: 'Women\'s Empowerment' },
-    { id: 'Environment', name: 'Environment' },
-    { id: 'success-stories', name: 'Success Stories' }
+    { id: 'Biodiversity', name: 'Biodiversity' },
+    { id: 'Research', name: 'Research' }
   ];
 
   const filteredPosts = activeCategory === 'all' 
-    ? blogPosts 
-    : blogPosts?.filter(post => post.category === activeCategory);
+    ? publishedBlogs 
+    : publishedBlogs.filter((post: BlogPost) => post.category === activeCategory);
 
   return (
     <>
@@ -74,7 +111,7 @@ const Blog: React.FC = () => {
               {filteredPosts && filteredPosts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredPosts.map(post => (
-                    <BlogCard key={post.id} post={post} />
+                    <BlogCard key={post._id} post={post} />
                   ))}
                 </div>
               ) : (

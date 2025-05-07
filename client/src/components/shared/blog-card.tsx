@@ -1,66 +1,68 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { BlogPost } from '@/lib/types';
 import { format } from 'date-fns';
+import { CalendarDays, Clock, User } from 'lucide-react';
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: {
+    _id: string;
+    title: string;
+    slug: string;
+    category: string;
+    content: string;
+    status: 'Draft' | 'Review' | 'Published';
+    publishDate?: string;
+    metaDescription?: string;
+    estimatedReadTime: string;
+    authorId: string;
+    createdAt: string;
+    updatedAt: string;
+  };
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
-  const { id, title, excerpt, image, audio, category, author, date } = post;
+  const { _id, title, slug, category, content, publishDate, estimatedReadTime } = post;
   
-  const formattedDate = format(new Date(date), 'MMMM d, yyyy');
-  
+  // Use publishDate if available, otherwise fallback to createdAt
+  const dateToFormat = publishDate || post.createdAt;
+  const formattedDate = dateToFormat ? format(new Date(dateToFormat), 'MMMM d, yyyy') : '';
+
+  // Create excerpt from content
+  const excerpt = content.length > 150 ? `${content.substring(0, 150)}...` : content;
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg">
-      <div 
-        className="h-48 bg-cover bg-center relative" 
-        style={{ backgroundImage: `url(${image})` }}
-      >
-        {audio && (
-          <div className="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-            </svg>
-            Audio
+    <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+      <Link href={`/blog/${slug}`} className="block">
+        <div className="p-6">
+          <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full">
+              {category}
+            </span>
           </div>
-        )}
-      </div>
-      <div className="p-6">
-        <div className="flex items-center text-sm text-gray-500 mb-3">
-          <span>{formattedDate}</span>
-          <span className="mx-2">•</span>
-          <span>{category}</span>
-        </div>
-        <h3 className="font-montserrat font-semibold text-xl mb-3">{title}</h3>
-        <p className="text-gray-600 text-sm mb-4">{excerpt}</p>
-        <div className="flex items-center">
-          <img 
-            src={author.avatar} 
-            alt={author.name} 
-            className="w-10 h-10 rounded-full mr-3 object-cover" 
-          />
-          <div>
-            <p className="text-sm font-medium">{author.name}</p>
-            <p className="text-xs text-gray-500">{author.title}</p>
+          
+          <h2 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
+            {title}
+          </h2>
+          
+          <p className="text-gray-600 mb-4 line-clamp-3">
+            {excerpt}
+          </p>
+          
+          <div className="flex items-center justify-between text-sm text-gray-500">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
+                <CalendarDays className="w-4 h-4" />
+                <span>{formattedDate}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                <span>{estimatedReadTime}</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="px-6 pb-6">
-        <Link href={`/blog/${id}`} className="text-primary font-medium hover:underline">
-          Read More →
-        </Link>
-        {audio && (
-          <span className="ml-4 text-gray-600 text-sm flex items-center inline-flex">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-primary" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-            </svg>
-            Listen
-          </span>
-        )}
-      </div>
-    </div>
+      </Link>
+    </article>
   );
 };
 
