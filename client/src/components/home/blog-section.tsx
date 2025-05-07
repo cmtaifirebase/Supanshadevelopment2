@@ -1,8 +1,22 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { BlogPost } from '@/lib/types';
 import BlogCard from '@/components/shared/blog-card';
+
+interface BlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  category: string;
+  content: string;
+  status: 'Draft' | 'Review' | 'Published';
+  publishDate?: string;
+  metaDescription?: string;
+  estimatedReadTime: string;
+  authorId: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const BlogSection: React.FC = () => {
   const { data: blogPosts, isLoading } = useQuery<BlogPost[]>({
@@ -25,7 +39,7 @@ const BlogSection: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts?.map(post => (
-              <BlogCard key={post.id} post={post} />
+              <BlogCard key={post._id} post={post} />
             ))}
           </div>
         )}

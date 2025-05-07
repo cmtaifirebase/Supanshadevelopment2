@@ -88,9 +88,9 @@ const BlogPost: React.FC = () => {
             <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
               <span className="px-3 py-1 bg-primary/10 text-primary rounded-full">
                 {blog.category}
-              </span>
+            </span>
             </div>
-            
+
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               {blog.title}
             </h1>
@@ -110,7 +110,7 @@ const BlogPost: React.FC = () => {
           {/* Content */}
           <div className="prose prose-lg max-w-none">
             <div dangerouslySetInnerHTML={{ __html: blog.content }} />
-          </div>
+            </div>
 
           {/* Tags */}
           {blog.tags && blog.tags.length > 0 && (
@@ -124,11 +124,11 @@ const BlogPost: React.FC = () => {
                   >
                     {tag}
                   </span>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
       </article>
     </>
   );

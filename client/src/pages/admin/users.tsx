@@ -184,7 +184,7 @@ const AdminUsers: React.FC = () => {
   const [rolesPage, setRolesPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Fetch users and roles with pagination
+  // Fetch both users and roles initially
   const {
     data: usersResponse,
     isLoading: isUsersLoading,
@@ -202,7 +202,25 @@ const AdminUsers: React.FC = () => {
   } = useQuery<RolesResponse>({
     queryKey: ["roles"],
     queryFn: () => fetchRoles(),
+    enabled: true,
   });
+
+  // Prefetch both queries on component mount
+  React.useEffect(() => {
+    const prefetchData = async () => {
+      await Promise.all([
+        queryClient.prefetchQuery({
+          queryKey: ["users", usersPage],
+          queryFn: () => fetchUsers(),
+        }),
+        queryClient.prefetchQuery({
+          queryKey: ["roles"],
+          queryFn: () => fetchRoles(),
+        }),
+      ]);
+    };
+    prefetchData();
+  }, [queryClient, usersPage]);
 
   const users = usersResponse?.data || [];
   const totalUsers = usersResponse?.total || users.length;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { format } from 'date-fns';
-import { CalendarDays, Clock, User } from 'lucide-react';
+import { CalendarDays, Clock } from 'lucide-react';
 
 interface BlogCardProps {
   post: {

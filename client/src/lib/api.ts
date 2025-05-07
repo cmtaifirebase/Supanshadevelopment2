@@ -469,7 +469,7 @@ interface DonationStats {
 
   // Fetch all blogs
   export const fetchBlogs = async (): Promise<BlogsResponse> => {
-    const res = await fetch(`${API_BASE_URL}/api/blog`, {
+    const res = await fetch(`${API_BASE_URL}/api/blog/admin`, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
