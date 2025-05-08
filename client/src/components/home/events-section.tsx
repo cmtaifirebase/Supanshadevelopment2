@@ -1,21 +1,93 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Event } from '@/lib/types';
 import EventCard from '@/components/shared/event-card';
+import { API_BASE_URL } from '@/config';
+
+interface Location {
+  country?: string;
+  state?: string;
+  district?: string;
+  block?: string;
+  venueName?: string;
+  fullAddress?: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+interface Event {
+  _id: string;
+  organizerName: string;
+  organizationLogo?: string;
+  websiteLink?: string;
+  eventTitle: string;
+  slug: string;
+  eventDescription?: string;
+  eventType?: string;
+  themeFocusArea?: string;
+  objective?: string;
+  targetAudience?: string[];
+  expectedParticipants?: number;
+  startDateTime: string;
+  endDateTime?: string;
+  location?: Location;
+  totalPasses?: number;
+  isFreeEvent?: boolean;
+  autoAttendanceRequired?: boolean;
+  volunteerRolesNeeded?: string;
+  needVolunteers?: boolean;
+  sponsorRequirements?: string;
+  sponsorLogos?: string[];
+  eventPoster?: string;
+  eventDocuments?: string[];
+  approvalStatus: 'Draft' | 'Pending' | 'Approved';
+  displayOnWebsite: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface EventsResponse {
+  success: boolean;
+  events: Event[];
+}
 
 const EventsSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('past');
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
 
-  const { data: upcomingEvents, isLoading: upcomingLoading } = useQuery<Event[]>({
-    queryKey: ['/api/events/upcoming'],
+  const { data: eventResponse, isLoading } = useQuery<EventsResponse>({
+    queryKey: ['events'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/event`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch events');
+      }
+      return response.json();
+    },
   });
 
-  const { data: pastEvents, isLoading: pastLoading } = useQuery<Event[]>({
-    queryKey: ['/api/events/past'],
-  });
+  // Filter only approved events
+  const approvedEvents = eventResponse?.events?.filter(event => 
+    event.approvalStatus === 'Approved' && event.displayOnWebsite
+  ) || [];
 
-  const events = activeTab === 'upcoming' ? upcomingEvents : pastEvents;
-  const isLoading = activeTab === 'upcoming' ? upcomingLoading : pastLoading;
+  // Filter events based on active tab
+  const filteredEvents = React.useMemo(() => {
+    const now = new Date();
+    
+    if (activeTab === 'upcoming') {
+      return approvedEvents
+        .filter(event => new Date(event.startDateTime) > now)
+        .sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime());
+    } else {
+      return approvedEvents
+        .filter(event => new Date(event.startDateTime) <= now)
+        .sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime());
+    }
+  }, [approvedEvents, activeTab]);
 
   return (
     <section className="py-16 bg-light">
@@ -56,10 +128,10 @@ const EventsSection: React.FC = () => {
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
-        ) : events && events.length > 0 ? (
+        ) : filteredEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map(event => (
-              <EventCard key={event.id} event={event} />
+            {filteredEvents.map(event => (
+              <EventCard key={event._id} event={event} />
             ))}
           </div>
         ) : (
