@@ -96,7 +96,7 @@ interface User {
   name: string;
   email: string;
   password?: string;
-  accountType: 'member' | 'organization';
+  accountType: 'individual' | 'organization';
   role: string | Role;
   status: 'active' | 'inactive';
   designation?: string | null;
@@ -173,7 +173,7 @@ const AdminUsers: React.FC = () => {
     name: '',
     email: '',
     password: '',
-    accountType: 'member',
+    accountType: 'individual',
     role: '',
     status: 'active',
     designation: null,
@@ -229,7 +229,7 @@ const AdminUsers: React.FC = () => {
 
   // Mutations for users
   const createUserMutation = useMutation({
-    mutationFn: (userData: { name: string; email: string; password: string; role: string; accountType: 'member' | 'organization' }) => 
+    mutationFn: (userData: { name: string; email: string; password: string; role: string; accountType: 'individual' | 'organization' }) => 
       createUser(userData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -502,7 +502,7 @@ const AdminUsers: React.FC = () => {
       name: '',
       email: '',
       password: '',
-      accountType: 'member',
+      accountType: 'individual',
       role: roles[0]?.name || 'user',
       designation: '',
     });
@@ -566,7 +566,7 @@ const AdminUsers: React.FC = () => {
           email: userForm.email || '',
           password: userForm.password || '',
           role: userForm.role as string,
-          accountType: userForm.accountType || 'member',
+          accountType: userForm.accountType || 'individual',
         });
       }
       setIsUserDialogOpen(false);
@@ -642,7 +642,7 @@ const AdminUsers: React.FC = () => {
       name: user?.name || '',
       email: user?.email || '',
       password: '',
-      accountType: user?.accountType || 'member',
+      accountType: user?.accountType || 'individual',
       role: typeof user?.role === 'string' ? user.role : user?.role?.name || '',
       designation: user?.designation || '',
     }));
@@ -674,7 +674,7 @@ const AdminUsers: React.FC = () => {
             email: form.email || '',
             password: form.password || '',
             role: form.role as string,
-            accountType: form.accountType || 'member',
+            accountType: form.accountType || 'individual',
           });
           toast({ title: "User created successfully" });
         }
@@ -750,7 +750,7 @@ const AdminUsers: React.FC = () => {
                   <SelectValue placeholder="Select account type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="member">Member</SelectItem>
+                  <SelectItem value="individual">Individual</SelectItem>
                   <SelectItem value="organization">Organization</SelectItem>
                 </SelectContent>
               </Select>

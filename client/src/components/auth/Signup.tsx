@@ -10,7 +10,7 @@ interface SignupData {
   name: string;
   email: string;
   password: string;
-  accountType: 'member' | 'organization';
+  accountType: 'individual' | 'organization';
 }
 
 interface SignupResponse {
@@ -58,7 +58,7 @@ function Signup() {
     name: '',
     email: '',
     password: '',
-    accountType: 'member',
+    accountType: 'individual',
   });
 
   const { mutate, isPending, error } = useMutation({
@@ -95,12 +95,12 @@ function Signup() {
 
         {/* Tabs */}
         <div className="flex justify-center mb-6 space-x-4">
-          {['member', 'organization'].map((type) => (
+          {['individual', 'organization'].map((type) => (
             <button
               key={type}
               type="button"
               onClick={() =>
-                setFormData((prev) => ({ ...prev, accountType: type as 'member' | 'organization' }))
+                setFormData((prev) => ({ ...prev, accountType: type as 'individual' | 'organization' }))
               }
               className={`px-4 py-2 rounded-full font-medium ${
                 formData.accountType === type
@@ -108,7 +108,7 @@ function Signup() {
                   : 'bg-gray-100 text-gray-700'
               }`}
             >
-              {type === 'member' ? 'Member' : 'Organization'}
+              {type === 'individual' ? 'Individual' : 'Organization'}
             </button>
           ))}
         </div>

@@ -159,7 +159,7 @@ interface DonationStats {
     name: string;
     email: string;
     role: string;
-    accountType: 'member' | 'organization';
+    accountType: 'individual' | 'organization';
     status: 'active' | 'inactive';
     createdAt: string; // ISO string
     designation?: string;
@@ -185,7 +185,7 @@ interface DonationStats {
     email: string;
     password: string;
     role: string;
-    accountType: 'member' | 'organization';
+    accountType: 'individual' | 'organization';
   }
   
   export interface UpdateUserRequest {

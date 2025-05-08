@@ -5,28 +5,49 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Cause } from '@/lib/types';
 import DonateCard from '@/components/shared/donate-card';
 import ProjectCard from '@/components/shared/project-card';
+import { API_BASE_URL } from '@/config';
+
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  image: string;
+  raised: number;
+  goal: number;
+  progress: number;
+}
 
 const Causes: React.FC = () => {
   const [activeTab, setActiveTab] = useState('all');
 
-  const { data: causes, isLoading: causesLoading } = useQuery<Cause[]>({
-    queryKey: ['/api/causes'],
+  const { data: causes, isLoading: causesLoading } = useQuery<{ success: boolean; causes: Cause[] }>({
+    queryKey: ['causes'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/cause/active`, {
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error('Failed to fetch causes');
+      return response.json();
+    },
   });
 
-  const { data: projects, isLoading: projectsLoading } = useQuery({
+  const { data: projects, isLoading: projectsLoading } = useQuery<{ success: boolean; projects: Project[] }>({
     queryKey: ['/api/projects'],
   });
 
   const isLoading = causesLoading || projectsLoading;
 
   const getCategoryCauses = (category: string) => {
-    if (category === 'all') return causes;
-    return causes?.filter(cause => cause.category === category);
+    if (!causes?.causes) return [];
+    if (category === 'all') return causes.causes;
+    return causes.causes.filter(cause => cause.category === category);
   };
 
   const getCategoryProjects = (category: string) => {
-    if (category === 'all') return projects;
-    return projects?.filter(project => project.category === category);
+    if (!projects?.projects) return [];
+    if (category === 'all') return projects.projects;
+    return projects.projects.filter(project => project.category === category);
   };
 
   return (
@@ -198,10 +219,10 @@ const Causes: React.FC = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {projects && getCategoryProjects(activeTab)?.map(project => (
+                  {getCategoryProjects(activeTab).map(project => (
                     <ProjectCard key={project.id} project={project} />
                   ))}
-                  {projects && getCategoryProjects(activeTab)?.length === 0 && (
+                  {getCategoryProjects(activeTab).length === 0 && (
                     <div className="col-span-4 text-center py-8">
                       <p className="text-xl text-gray-700">No projects found in this category.</p>
                     </div>

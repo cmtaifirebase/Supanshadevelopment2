@@ -8,7 +8,7 @@ interface DonateCardProps {
 }
 
 const DonateCard: React.FC<DonateCardProps> = ({ cause }) => {
-  const { id, title, description, image, raised, goal, progress } = cause;
+  const { id, title, slug, description, image, raised, goal, progress } = cause;
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden">
@@ -27,7 +27,7 @@ const DonateCard: React.FC<DonateCardProps> = ({ cause }) => {
           </div>
         </div>
         <Link 
-          href={`/donate?cause=${id}`} 
+          href={`/donate?cause=${slug}`} 
           className="inline-block bg-secondary hover:bg-secondary/90 text-white px-4 py-3 rounded font-medium transition-colors w-full text-center"
         >
           Donate Now

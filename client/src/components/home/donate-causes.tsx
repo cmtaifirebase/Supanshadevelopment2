@@ -2,10 +2,18 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Cause } from '@/lib/types';
 import DonateCard from '@/components/shared/donate-card';
+import { API_BASE_URL } from '@/config';
 
 const DonateCauses: React.FC = () => {
-  const { data: causes, isLoading, error } = useQuery<Cause[]>({
-    queryKey: ['/api/causes'],
+  const { data: causes, isLoading, error } = useQuery<{ success: boolean; causes: Cause[] }>({
+    queryKey: ['causes'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/cause/active`, {
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error('Failed to fetch causes');
+      return response.json();
+    },
   });
 
   return (
@@ -26,7 +34,7 @@ const DonateCauses: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {causes?.slice(0, 3).map(cause => (
+            {causes?.causes?.slice(0, 3).map(cause => (
               <DonateCard key={cause.id} cause={cause} />
             ))}
           </div>

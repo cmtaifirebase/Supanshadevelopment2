@@ -14,6 +14,7 @@ export interface Project {
 export interface Cause {
   id: number;
   title: string;
+  slug: string;
   description: string;
   image: string;
   raised: number;
