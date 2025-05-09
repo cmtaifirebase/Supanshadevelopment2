@@ -30,6 +30,7 @@ const routeToModuleMap: Record<string, string> = {
   '/admin/crowd-funding': 'crowdFunding',
   '/admin/forum': 'forum',
   '/admin/shop': 'shop',
+  '/admin/contacts': 'contacts',
 };
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {

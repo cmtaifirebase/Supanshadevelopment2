@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { apiRequest } from '@/lib/queryClient';
+import { API_BASE_URL } from '@/config';
 import { useToast } from '@/hooks/use-toast';
 
 // Form schema
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Please enter your full name' }),
   email: z.string().email({ message: 'Please enter a valid email' }),
-  phone: z.string().optional(),
+  phone: z.string().min(10, { message: 'Please enter a valid phone number' }),
   subject: z.string().min(3, { message: 'Please enter a subject' }),
   message: z.string().min(10, { message: 'Please enter a message (minimum 10 characters)' }),
 });
@@ -38,19 +38,28 @@ const ContactForm: React.FC = () => {
 
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
-
     try {
-      const response = await apiRequest('POST', '/api/contact', data);
-      const result = await response.json();
-
-      toast({
-        title: 'Message Sent!',
-        description: result.message || 'Thank you for reaching out to us. We will get back to you soon!',
+      const response = await fetch(`${API_BASE_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(data),
       });
-
-      reset();
+      const result = await response.json();
+      if (response.ok) {
+        toast({
+          title: 'Message Sent!',
+          description: result.message || 'Thank you for reaching out to us. We will get back to you soon!',
+        });
+        reset();
+      } else {
+        toast({
+          title: 'Submission Failed',
+          description: result.message || 'There was an error sending your message. Please try again.',
+          variant: 'destructive',
+        });
+      }
     } catch (error) {
-      console.error('Form submission error:', error);
       toast({
         title: 'Submission Failed',
         description: 'There was an error sending your message. Please try again.',
@@ -79,7 +88,6 @@ const ContactForm: React.FC = () => {
             <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
             Email
@@ -95,20 +103,21 @@ const ContactForm: React.FC = () => {
             <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-            Phone Number (Optional)
+            Phone Number
           </label>
           <input
             id="phone"
             type="tel"
-            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
-            placeholder="Enter your phone number (optional)"
+            className={`w-full p-3 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-primary focus:border-primary`}
+            placeholder="Enter your phone number"
             {...register('phone')}
           />
+          {errors.phone && (
+            <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+          )}
         </div>
-
         <div>
           <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
             Subject
@@ -124,7 +133,6 @@ const ContactForm: React.FC = () => {
             <p className="mt-1 text-sm text-red-600">{errors.subject.message}</p>
           )}
         </div>
-
         <div>
           <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
             Message
@@ -141,7 +149,6 @@ const ContactForm: React.FC = () => {
           )}
         </div>
       </div>
-
       <div>
         <button
           type="submit"

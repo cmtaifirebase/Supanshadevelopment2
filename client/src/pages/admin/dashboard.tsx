@@ -26,6 +26,7 @@ import {
   FaUsers,
   FaChartLine,
   FaProjectDiagram,
+  FaPhone,
 } from "react-icons/fa";
 import { useLocation } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -47,6 +48,7 @@ const modules = [
   { label: "Volunteers", icon: <FaUsers />, href: "/admin/volunteers", module: "volunteers" },
   { label: "Donations", icon: <FaChartLine />, href: "/admin/donations", module: "donations" },
   { label: "Projects", icon: <FaProjectDiagram />, href: "/admin/projects", module: "projects" },
+  { label: "Contacts", icon: <FaPhone />, href: "/admin/contacts", module: "contacts" },
 ];
 
 const AdminDashboard: React.FC = () => {

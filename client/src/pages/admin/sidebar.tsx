@@ -54,6 +54,7 @@ const adminMenu: MenuItem[] = [
   { label: "Forum", icon: <FaComments />, href: "/admin/forum", module: "forum" },
   { label: "Shop", icon: <FaShoppingCart />, href: "/admin/shop", module: "shop" },
   { label: "Donations", icon: <FaMoneyBill />, href: "/admin/donations", module: "donations" },
+  { label: "Contacts", icon: <FaComments />, href: "/admin/contacts", module: "contacts" },
 ];
 
 const Sidebar: React.FC = () => {

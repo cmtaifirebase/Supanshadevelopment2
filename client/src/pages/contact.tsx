@@ -9,7 +9,6 @@ const Contact: React.FC = () => {
         <title>Contact Us - Supansha Development Foundation</title>
         <meta name="description" content="Get in touch with us for inquiries, partnerships, or to learn more about our work. We're here to help and collaborate." />
       </Helmet>
-
       {/* Hero Banner */}
       <div className="relative py-24 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
         <div className="absolute inset-0 opacity-20 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')" }}></div>
@@ -20,7 +19,6 @@ const Contact: React.FC = () => {
           </p>
         </div>
       </div>
-
       {/* Main Content */}
       <div className="py-16 bg-light">
         <div className="container mx-auto px-4">
@@ -30,7 +28,6 @@ const Contact: React.FC = () => {
               <h2 className="text-2xl font-montserrat font-bold mb-6">Send Us a Message</h2>
               <ContactForm />
             </div>
-
             {/* Contact Information */}
             <div>
               <div className="bg-white rounded-lg shadow-lg p-8 mb-8">

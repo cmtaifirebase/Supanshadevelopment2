@@ -133,6 +133,7 @@ const modules = [
   { id: "forum", label: "Forum" },
   { id: "shop", label: "Shop" },
   { id: "donations", label: "Donations" },
+  { id: "contacts", label: "Contacts" },
 ];
 
 const designations = [
