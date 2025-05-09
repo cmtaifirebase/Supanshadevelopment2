@@ -50,7 +50,7 @@ async function registerUser(data: SignupData): Promise<SignupResponse> {
 }
 
 function Signup() {
-  const { login } = useAuth();
+  const { login, loading } = useAuth();
   const [, navigate] = useLocation();
   const { toast } = useToast();
 
@@ -69,7 +69,9 @@ function Signup() {
         title: 'Success',
         description: 'Account created successfully',
       });
-      navigate('/admin/profile');
+      if(!loading) {
+        navigate('/admin/profile');
+      }
     },
     onError: (error) => {
       toast({

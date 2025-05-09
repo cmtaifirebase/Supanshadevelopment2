@@ -8,110 +8,29 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { RefreshCw } from 'lucide-react';
+import { API_BASE_URL } from '@/config';
 
-// Mock donations data
-const initialDonations = [
-  { 
-    id: 1, 
-    donor: 'Rahul Sharma', 
-    email: 'rahul.sharma@example.com', 
-    phone: '+91 98765 43210',
-    amount: 5000,
-    currency: 'INR',
-    project: 'Education Projects',
-    status: 'Completed',
-    date: '2025-04-15',
-    paymentMethod: 'Credit Card',
-    isRecurring: false,
-    receiptIssued: true,
-  },
-  { 
-    id: 2, 
-    donor: 'Meera Joshi', 
-    email: 'meera.joshi@example.com', 
-    phone: '+91 87654 32109',
-    amount: 2500,
-    currency: 'INR',
-    project: 'Healthcare Initiatives',
-    status: 'Completed',
-    date: '2025-04-14',
-    paymentMethod: 'UPI',
-    isRecurring: false,
-    receiptIssued: true,
-  },
-  { 
-    id: 3, 
-    donor: 'Vivek Gupta', 
-    email: 'vivek.gupta@example.com', 
-    phone: '+91 76543 21098',
-    amount: 10000,
-    currency: 'INR',
-    project: 'Sustainable Agriculture',
-    status: 'Processing',
-    date: '2025-04-12',
-    paymentMethod: 'Bank Transfer',
-    isRecurring: false,
-    receiptIssued: false,
-  },
-  { 
-    id: 4, 
-    donor: 'Anjali Singh', 
-    email: 'anjali.singh@example.com', 
-    phone: '+91 65432 10987',
-    amount: 1000,
-    currency: 'INR',
-    project: 'General Fund',
-    status: 'Failed',
-    date: '2025-04-10',
-    paymentMethod: 'Credit Card',
-    isRecurring: false,
-    receiptIssued: false,
-  },
-  { 
-    id: 5, 
-    donor: 'Arjun Mehta', 
-    email: 'arjun.mehta@example.com', 
-    phone: '+91 54321 09876',
-    amount: 3000,
-    currency: 'INR',
-    project: 'Women Empowerment',
-    status: 'Completed',
-    date: '2025-04-08',
-    paymentMethod: 'UPI',
-    isRecurring: true,
-    receiptIssued: true,
-  },
-  { 
-    id: 6, 
-    donor: 'Neha Kapoor', 
-    email: 'neha.kapoor@example.com', 
-    phone: '+91 43210 98765',
-    amount: 5000,
-    currency: 'INR',
-    project: 'Education Projects',
-    status: 'Completed',
-    date: '2025-04-05',
-    paymentMethod: 'Credit Card',
-    isRecurring: true,
-    receiptIssued: true,
-  },
-  { 
-    id: 7, 
-    donor: 'Sameer Jain', 
-    email: 'sameer.jain@example.com', 
-    phone: '+91 32109 87654',
-    amount: 7500,
-    currency: 'INR',
-    project: 'Rural Development',
-    status: 'Completed',
-    date: '2025-04-02',
-    paymentMethod: 'Bank Transfer',
-    isRecurring: false,
-    receiptIssued: true,
-  },
-];
+interface Donation {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  amount: number;
+  causeId?: { name: string } | null;
+  message: string;
+  paymentId: string;
+  status: 'pending' | 'completed' | 'failed';
+  receipt?: string | null;
+  userId?: string | null;
+  date?: string;
+  aadharNumber?: string | null;
+  panCardNumber?: string | null;
+  createdAt: string;
+  isRecurring?: boolean;
+}
 
-// Project options for donation allocation
 const projectOptions = [
   'Education Projects',
   'Healthcare Initiatives',
@@ -123,76 +42,75 @@ const projectOptions = [
 ];
 
 const AdminDonations: React.FC = () => {
-  const [donations, setDonations] = useState(initialDonations);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
-  const [selectedDonation, setSelectedDonation] = useState<any>(null);
+  const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const [isReceiptDialogOpen, setIsReceiptDialogOpen] = useState(false);
   const { toast } = useToast();
-  
+  const queryClient = useQueryClient();
+
+  // Fetch donations
+  const { data, isLoading, refetch, isRefetching } = useQuery<{ success: boolean; donations: Donation[] }>({
+    queryKey: ['donations'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/donation`, {
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error('Failed to fetch donations');
+      return response.json();
+    },
+  });
+
+  const donations = data?.donations || [];
+
   // Calculate donation statistics
-  const totalDonations = donations.filter(d => d.status === 'Completed').reduce((sum, d) => sum + d.amount, 0);
-  const donationCount = donations.filter(d => d.status === 'Completed').length;
+  const totalDonations = donations.filter(d => d.status === 'completed').reduce((sum, d) => sum + d.amount, 0);
+  const donationCount = donations.filter(d => d.status === 'completed').length;
   const averageDonation = donationCount > 0 ? totalDonations / donationCount : 0;
-  const recurringDonors = new Set(donations.filter(d => d.isRecurring && d.status === 'Completed').map(d => d.email)).size;
-  
+  const recurringDonors = new Set(donations.filter(d => d.isRecurring && d.status === 'completed').map(d => d.email)).size;
+
   // Filter donations based on search term and active tab
   const filteredDonations = donations.filter(donation => {
     // Filter by search term
     const matchesSearch = 
-      donation.donor.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      donation.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
       donation.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      donation.project.toLowerCase().includes(searchTerm.toLowerCase());
-    
+      (donation.causeId?.name?.toLowerCase() || '').includes(searchTerm.toLowerCase());
     // Filter by status tab
     if (activeTab === 'all') return matchesSearch;
-    if (activeTab === 'completed') return matchesSearch && donation.status === 'Completed';
-    if (activeTab === 'processing') return matchesSearch && donation.status === 'Processing';
-    if (activeTab === 'failed') return matchesSearch && donation.status === 'Failed';
+    if (activeTab === 'completed') return matchesSearch && donation.status === 'completed';
+    if (activeTab === 'processing') return matchesSearch && donation.status === 'pending';
+    if (activeTab === 'failed') return matchesSearch && donation.status === 'failed';
     if (activeTab === 'recurring') return matchesSearch && donation.isRecurring;
-    
     return matchesSearch;
   });
-  
-  const handleViewDetails = (donation: any) => {
+
+  const handleViewDetails = (donation: Donation) => {
     setSelectedDonation(donation);
     setIsDetailsDialogOpen(true);
   };
-  
-  const handleGenerateReceipt = (donation: any) => {
+
+  const handleGenerateReceipt = (donation: Donation) => {
     setSelectedDonation(donation);
     setIsReceiptDialogOpen(true);
   };
-  
-  const handleUpdateStatus = (id: number, newStatus: string) => {
-    setDonations(donations.map(donation => 
-      donation.id === id 
-        ? { ...donation, status: newStatus } 
-        : donation
-    ));
-    
+
+  const handleUpdateStatus = (id: string, newStatus: string) => {
+    // Implement status update logic
     toast({
       title: "Status Updated",
       description: `Donation status has been updated to ${newStatus}`,
     });
     
     // Update selected donation if details dialog is open
-    if (selectedDonation && selectedDonation.id === id) {
-      setSelectedDonation({...selectedDonation, status: newStatus});
+    if (selectedDonation && selectedDonation._id === id) {
+      setSelectedDonation({...selectedDonation, status: newStatus as 'completed' | 'pending' | 'failed'});
     }
   };
   
   const handleIssueReceipt = () => {
-    setDonations(donations.map(donation => 
-      donation.id === selectedDonation.id 
-        ? { ...donation, receiptIssued: true } 
-        : donation
-    ));
-    
-    setSelectedDonation({...selectedDonation, receiptIssued: true});
-    setIsReceiptDialogOpen(false);
-    
+    // Implement receipt issue logic
     toast({
       title: "Receipt Issued",
       description: "Donation receipt has been generated and sent to the donor.",
@@ -201,11 +119,20 @@ const AdminDonations: React.FC = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Donation Management</h1>
-        <p className="text-gray-600">Track, process, and manage incoming donations</p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Donation Management</h1>
+          <p className="text-gray-600">Track, process, and manage incoming donations</p>
+        </div>
+        <Button variant="outline" onClick={() => refetch()}>
+          {isLoading || isRefetching ? (
+            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <RefreshCw className="w-4 h-4 mr-2" />
+          )}
+          Refresh
+        </Button>
       </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardContent className="pt-6">
@@ -216,7 +143,6 @@ const AdminDonations: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-        
         <Card>
           <CardContent className="pt-6">
             <div className="flex flex-col">
@@ -226,7 +152,6 @@ const AdminDonations: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-        
         <Card>
           <CardContent className="pt-6">
             <div className="flex flex-col">
@@ -236,18 +161,16 @@ const AdminDonations: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-        
         <Card>
           <CardContent className="pt-6">
             <div className="flex flex-col">
               <p className="text-sm font-medium text-gray-500">Pending Receipts</p>
-              <h3 className="text-2xl font-bold">{donations.filter(d => d.status === 'Completed' && !d.receiptIssued).length}</h3>
+              <h3 className="text-2xl font-bold">{donations.filter(d => d.status === 'completed' && !d.receipt).length}</h3>
               <p className="text-xs text-gray-500 mt-1">Awaiting processing</p>
             </div>
           </CardContent>
         </Card>
       </div>
-      
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
           <TabsList>
@@ -258,7 +181,6 @@ const AdminDonations: React.FC = () => {
             <TabsTrigger value="recurring">Recurring</TabsTrigger>
           </TabsList>
         </Tabs>
-        
         <div className="relative w-full md:w-64">
           <Input
             type="text"
@@ -283,7 +205,6 @@ const AdminDonations: React.FC = () => {
           </svg>
         </div>
       </div>
-      
       <Card>
         <CardHeader>
           <CardTitle>Donation Records</CardTitle>
@@ -292,98 +213,101 @@ const AdminDonations: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Donor</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Project</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Receipt</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredDonations.map((donation) => (
-                <TableRow key={donation.id}>
-                  <TableCell className="font-medium">
-                    {donation.donor}
-                    {donation.isRecurring && (
-                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                        Recurring
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell>{donation.date}</TableCell>
-                  <TableCell>₹{donation.amount.toLocaleString()}</TableCell>
-                  <TableCell>{donation.project}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        donation.status === 'Completed'
-                          ? 'bg-green-100 text-green-800'
-                          : donation.status === 'Processing'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}
-                    >
-                      {donation.status}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    {donation.receiptIssued ? (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        Issued
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                        Pending
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleViewDetails(donation)}
-                      >
-                        Details
-                      </Button>
-                      {donation.status === 'Completed' && !donation.receiptIssued && (
-                        <Button
-                          size="sm"
-                          onClick={() => handleGenerateReceipt(donation)}
-                        >
-                          Issue Receipt
-                        </Button>
-                      )}
-                      {donation.status === 'Processing' && (
-                        <Button
-                          variant="default"
-                          size="sm"
-                          onClick={() => handleUpdateStatus(donation.id, 'Completed')}
-                        >
-                          Mark Complete
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {filteredDonations.length === 0 && (
+          {isLoading ? (
+            <div>Loading donations...</div>
+          ) : (
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-6 text-gray-500">
-                    No donations found matching your search.
-                  </TableCell>
+                  <TableHead>Donor</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Project</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Receipt</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredDonations.map((donation) => (
+                  <TableRow key={donation._id}>
+                    <TableCell className="font-medium">
+                      {donation.name}
+                      {donation.isRecurring && (
+                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                          Recurring
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>{donation.createdAt ? new Date(donation.createdAt).toLocaleDateString() : ''}</TableCell>
+                    <TableCell>₹{donation.amount.toLocaleString()}</TableCell>
+                    <TableCell>{donation.causeId?.name || 'General Fund'}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          donation.status === 'completed'
+                            ? 'bg-green-100 text-green-800'
+                            : donation.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}
+                      >
+                        {donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {donation.receipt ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          Issued
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                          Pending
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewDetails(donation)}
+                        >
+                          Details
+                        </Button>
+                        {donation.status === 'completed' && !donation.receipt && (
+                          <Button
+                            size="sm"
+                            onClick={() => handleGenerateReceipt(donation)}
+                          >
+                            Issue Receipt
+                          </Button>
+                        )}
+                        {donation.status === 'pending' && (
+                          <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() => handleUpdateStatus(donation._id, 'completed')}
+                          >
+                            Mark Complete
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {filteredDonations.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-6 text-gray-500">
+                      No donations found matching your search.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
-      
       {/* Donation Details Dialog */}
       <Dialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen}>
         <DialogContent className="max-w-2xl">
@@ -393,14 +317,13 @@ const AdminDonations: React.FC = () => {
               Complete information about this donation.
             </DialogDescription>
           </DialogHeader>
-          
           {selectedDonation && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Donor Information</h3>
                   <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">Name:</span> {selectedDonation.donor}</p>
+                    <p><span className="font-medium">Name:</span> {selectedDonation.name}</p>
                     <p><span className="font-medium">Email:</span> {selectedDonation.email}</p>
                     <p><span className="font-medium">Phone:</span> {selectedDonation.phone}</p>
                     <p>
@@ -409,83 +332,48 @@ const AdminDonations: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Payment Details</h3>
                   <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">Date:</span> {selectedDonation.date}</p>
-                    <p><span className="font-medium">Amount:</span> ₹{selectedDonation.amount.toLocaleString()} {selectedDonation.currency}</p>
-                    <p><span className="font-medium">Payment Method:</span> {selectedDonation.paymentMethod}</p>
+                    <p><span className="font-medium">Date:</span> {selectedDonation.createdAt ? new Date(selectedDonation.createdAt).toLocaleDateString() : ''}</p>
+                    <p><span className="font-medium">Amount:</span> ₹{selectedDonation.amount.toLocaleString()}</p>
+                    <p><span className="font-medium">Payment Method:</span> {selectedDonation.paymentId}</p>
                     <p>
                       <span className="font-medium">Status:</span>{' '}
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                          selectedDonation.status === 'Completed'
+                          selectedDonation.status === 'completed'
                             ? 'bg-green-100 text-green-800'
-                            : selectedDonation.status === 'Processing'
+                            : selectedDonation.status === 'pending'
                             ? 'bg-yellow-100 text-yellow-800'
                             : 'bg-red-100 text-red-800'
                         }`}
                       >
-                        {selectedDonation.status}
+                        {selectedDonation.status.charAt(0).toUpperCase() + selectedDonation.status.slice(1)}
                       </span>
                     </p>
                     <p>
                       <span className="font-medium">Receipt:</span>{' '}
-                      {selectedDonation.receiptIssued ? 'Issued' : 'Pending'}
+                      {selectedDonation.receipt ? 'Issued' : 'Pending'}
                     </p>
                   </div>
                 </div>
               </div>
-              
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Donation Allocation</h3>
                   <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">Project:</span> {selectedDonation.project}</p>
-                    
-                    {selectedDonation.status === 'Completed' && (
-                      <div className="mt-4">
-                        <Label htmlFor="project">Reallocate to Different Project</Label>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Select defaultValue={selectedDonation.project}>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select project" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {projectOptions.map((project) => (
-                                <SelectItem key={project} value={project}>
-                                  {project}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              toast({
-                                title: "Allocation Updated",
-                                description: "The donation has been reallocated to the selected project",
-                              });
-                            }}
-                          >
-                            Update
-                          </Button>
-                        </div>
-                      </div>
-                    )}
+                    <p><span className="font-medium">Project:</span> {selectedDonation.causeId?.name || 'General Fund'}</p>
                   </div>
                 </div>
-                
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold mb-2">Actions</h3>
                   <div className="space-y-3">
-                    {selectedDonation.status === 'Processing' && (
+                    {selectedDonation.status === 'pending' && (
                       <Button 
                         className="w-full"
                         onClick={() => {
-                          handleUpdateStatus(selectedDonation.id, 'Completed');
+                          handleUpdateStatus(selectedDonation._id, 'completed');
                           setIsDetailsDialogOpen(false);
                         }}
                       >
@@ -493,7 +381,7 @@ const AdminDonations: React.FC = () => {
                       </Button>
                     )}
                     
-                    {selectedDonation.status === 'Completed' && !selectedDonation.receiptIssued && (
+                    {selectedDonation.status === 'completed' && !selectedDonation.receipt && (
                       <Button 
                         className="w-full"
                         onClick={() => {
@@ -505,7 +393,7 @@ const AdminDonations: React.FC = () => {
                       </Button>
                     )}
                     
-                    {selectedDonation.status === 'Completed' && selectedDonation.receiptIssued && (
+                    {selectedDonation.status === 'completed' && selectedDonation.receipt && (
                       <Button 
                         className="w-full"
                         variant="outline"
@@ -537,7 +425,6 @@ const AdminDonations: React.FC = () => {
               </div>
             </div>
           )}
-          
           <DialogFooter className="mt-4">
             <Button variant="outline" onClick={() => setIsDetailsDialogOpen(false)}>
               Close
@@ -545,7 +432,6 @@ const AdminDonations: React.FC = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
       {/* Receipt Generation Dialog */}
       <Dialog open={isReceiptDialogOpen} onOpenChange={setIsReceiptDialogOpen}>
         <DialogContent>
@@ -562,16 +448,16 @@ const AdminDonations: React.FC = () => {
                 <div className="mb-6 flex justify-between items-start">
                   <div>
                     <h3 className="text-xl font-bold">Donation Receipt</h3>
-                    <p className="text-sm text-gray-500">Receipt No: SDF-{selectedDonation.id.toString().padStart(6, '0')}</p>
+                    <p className="text-sm text-gray-500">Receipt No: SDF-{selectedDonation._id.slice(0, 6)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium">Date: {selectedDonation.date}</p>
+                    <p className="text-sm font-medium">Date: {selectedDonation.createdAt ? new Date(selectedDonation.createdAt).toLocaleDateString() : ''}</p>
                   </div>
                 </div>
                 
                 <div className="mb-6">
                   <h4 className="text-sm font-medium text-gray-500 mb-1">Donor Information</h4>
-                  <p className="font-medium">{selectedDonation.donor}</p>
+                  <p className="font-medium">{selectedDonation.name}</p>
                   <p>{selectedDonation.email}</p>
                   <p>{selectedDonation.phone}</p>
                 </div>
@@ -580,15 +466,15 @@ const AdminDonations: React.FC = () => {
                   <h4 className="text-sm font-medium text-gray-500 mb-1">Donation Details</h4>
                   <div className="flex justify-between border-b border-gray-200 py-2">
                     <span>Donation Amount:</span>
-                    <span className="font-medium">₹{selectedDonation.amount.toLocaleString()} {selectedDonation.currency}</span>
+                    <span className="font-medium">₹{selectedDonation.amount.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 py-2">
                     <span>Project:</span>
-                    <span>{selectedDonation.project}</span>
+                    <span>{selectedDonation.causeId?.name || 'General Fund'}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 py-2">
                     <span>Payment Method:</span>
-                    <span>{selectedDonation.paymentMethod}</span>
+                    <span>{selectedDonation.paymentId}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 py-2">
                     <span>Donation Type:</span>
