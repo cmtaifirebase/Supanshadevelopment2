@@ -3,21 +3,35 @@ import { Helmet } from 'react-helmet';
 import { useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import DonationForm from '@/components/forms/donation-form';
-import { Cause } from '@/lib/types';
+import { API_BASE_URL } from '@/config';
+
+interface Cause {
+  _id: string;
+  title: string;
+  description: string;
+  goal: number;
+  raised: number;
+  isActive: boolean;
+}
 
 const Donate: React.FC = () => {
   const [location] = useLocation();
   const queryParams = new URLSearchParams(location.split('?')[1] || '');
   const causeIdParam = queryParams.get('cause');
-  const [selectedCauseId, setSelectedCauseId] = useState<number | null>(
-    causeIdParam ? parseInt(causeIdParam) : null
-  );
+  const [selectedCauseId, setSelectedCauseId] = useState<string | null>(causeIdParam || null);
 
-  const { data: causes, isLoading } = useQuery<Cause[]>({
-    queryKey: ['/api/causes'],
+  const { data: causes, isLoading } = useQuery<{ success: boolean; causes: Cause[] }>({
+    queryKey: ['causes'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/cause/active`, {
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error('Failed to fetch causes');
+      return response.json();
+    },
   });
 
-  const selectedCause = causes?.find(cause => cause.id === selectedCauseId);
+  const selectedCause = causes?.causes.find(cause => cause._id === selectedCauseId);
 
   return (
     <>
@@ -63,11 +77,11 @@ const Donate: React.FC = () => {
                         <select 
                           className="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
                           value={selectedCauseId || ""}
-                          onChange={(e) => setSelectedCauseId(e.target.value ? parseInt(e.target.value) : null)}
+                          onChange={(e) => setSelectedCauseId(e.target.value || null)}
                         >
                           <option value="">General Donation</option>
-                          {causes?.map(cause => (
-                            <option key={cause.id} value={cause.id}>
+                          {causes?.causes.map(cause => (
+                            <option key={cause._id} value={cause._id}>
                               {cause.title}
                             </option>
                           ))}

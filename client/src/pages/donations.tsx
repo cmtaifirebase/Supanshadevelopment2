@@ -68,7 +68,7 @@ const Donations: React.FC = () => {
               You need to be logged in to view your donations history.
             </p>
             <Button 
-              onClick={() => setLocation('/login?redirect=/donations')}
+              onClick={() => setLocation('/pages/admin/login?redirect=/donations')}
               className="w-full"
             >
               Log In
