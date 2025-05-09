@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
@@ -18,7 +18,9 @@ const Donate: React.FC = () => {
   const [location] = useLocation();
   const queryParams = new URLSearchParams(location.split('?')[1] || '');
   const causeIdParam = queryParams.get('cause');
-  const [selectedCauseId, setSelectedCauseId] = useState<string | null>(causeIdParam || null);
+  const [selectedCauseId, setSelectedCauseId] = useState<string | null>(null);
+  const [customCause, setCustomCause] = useState<string>('');
+  const [isCustomCause, setIsCustomCause] = useState(false);
 
   const { data: causes, isLoading } = useQuery<{ success: boolean; causes: Cause[] }>({
     queryKey: ['causes'],
@@ -31,7 +33,37 @@ const Donate: React.FC = () => {
     },
   });
 
+  // Effect to handle URL cause parameter
+  useEffect(() => {
+    if (causeIdParam) {
+      // Check if causeIdParam matches any existing cause
+      const matchingCause = causes?.causes.find(cause => cause._id === causeIdParam);
+      if (matchingCause) {
+        setSelectedCauseId(causeIdParam);
+        setIsCustomCause(false);
+      } else {
+        // If no matching cause found, treat it as a custom cause
+        setCustomCause(causeIdParam);
+        setIsCustomCause(true);
+      }
+    }
+  }, [causeIdParam, causes]);
+
   const selectedCause = causes?.causes.find(cause => cause._id === selectedCauseId);
+
+  const handleCauseChange = (value: string) => {
+    if (value === 'custom') {
+      setIsCustomCause(true);
+      setSelectedCauseId(null);
+    } else if (value === '') {
+      setIsCustomCause(false);
+      setSelectedCauseId(null);
+      setCustomCause('');
+    } else {
+      setIsCustomCause(false);
+      setSelectedCauseId(value);
+    }
+  };
 
   return (
     <>
@@ -60,14 +92,17 @@ const Donate: React.FC = () => {
                 <h2 className="text-2xl font-montserrat font-bold mb-6">
                   {selectedCause 
                     ? `Donate to: ${selectedCause.title}` 
+                    : isCustomCause
+                    ? `Donate to: ${customCause}`
                     : "Select a cause or make a general donation"}
                 </h2>
 
                 {!selectedCause && (
                   <div className="mb-8">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Choose a cause to support (optional)
+                      Choose a cause to support
                     </label>
+                    <div className="space-y-4">
                     <div className="relative">
                       {isLoading ? (
                         <div className="flex justify-center py-4">
@@ -76,16 +111,30 @@ const Donate: React.FC = () => {
                       ) : (
                         <select 
                           className="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
-                          value={selectedCauseId || ""}
-                          onChange={(e) => setSelectedCauseId(e.target.value || null)}
+                            value={isCustomCause ? 'custom' : (selectedCauseId || '')}
+                            onChange={(e) => handleCauseChange(e.target.value)}
                         >
                           <option value="">General Donation</option>
-                          {causes?.causes.map(cause => (
-                            <option key={cause._id} value={cause._id}>
+                            {causes?.causes.map(cause => (
+                              <option key={cause._id} value={cause._id}>
                               {cause.title}
                             </option>
                           ))}
+                            <option value="custom">Other (specify)</option>
                         </select>
+                        )}
+                      </div>
+
+                      {isCustomCause && (
+                        <div>
+                          <input
+                            type="text"
+                            placeholder="Enter cause name"
+                            className="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
+                            value={customCause}
+                            onChange={(e) => setCustomCause(e.target.value)}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
@@ -99,7 +148,7 @@ const Donate: React.FC = () => {
                         <p className="text-sm text-gray-600">{selectedCause.description}</p>
                       </div>
                       <button 
-                        onClick={() => setSelectedCauseId(null)}
+                        onClick={() => handleCauseChange('')}
                         className="text-primary hover:text-primary/80 text-sm font-medium"
                       >
                         Change
@@ -120,7 +169,10 @@ const Donate: React.FC = () => {
                   </div>
                 )}
 
-                <DonationForm selectedCauseId={selectedCauseId} />
+                <DonationForm 
+                  selectedCauseId={selectedCauseId} 
+                  customCause={isCustomCause ? customCause : null} 
+                />
               </div>
             </div>
 

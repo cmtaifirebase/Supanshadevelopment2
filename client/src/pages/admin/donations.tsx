@@ -63,13 +63,13 @@ const AdminDonations: React.FC = () => {
   });
 
   const donations = data?.donations || [];
-
+  
   // Calculate donation statistics
   const totalDonations = donations.filter(d => d.status === 'completed').reduce((sum, d) => sum + d.amount, 0);
   const donationCount = donations.filter(d => d.status === 'completed').length;
   const averageDonation = donationCount > 0 ? totalDonations / donationCount : 0;
   const recurringDonors = new Set(donations.filter(d => d.isRecurring && d.status === 'completed').map(d => d.email)).size;
-
+  
   // Filter donations based on search term and active tab
   const filteredDonations = donations.filter(donation => {
     // Filter by search term
@@ -85,17 +85,17 @@ const AdminDonations: React.FC = () => {
     if (activeTab === 'recurring') return matchesSearch && donation.isRecurring;
     return matchesSearch;
   });
-
+  
   const handleViewDetails = (donation: Donation) => {
     setSelectedDonation(donation);
     setIsDetailsDialogOpen(true);
   };
-
+  
   const handleGenerateReceipt = (donation: Donation) => {
     setSelectedDonation(donation);
     setIsReceiptDialogOpen(true);
   };
-
+  
   const handleUpdateStatus = (id: string, newStatus: string) => {
     // Implement status update logic
     toast({
@@ -121,8 +121,8 @@ const AdminDonations: React.FC = () => {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Donation Management</h1>
-          <p className="text-gray-600">Track, process, and manage incoming donations</p>
+        <h1 className="text-3xl font-bold mb-2">Donation Management</h1>
+        <p className="text-gray-600">Track, process, and manage incoming donations</p>
         </div>
         <Button variant="outline" onClick={() => refetch()}>
           {isLoading || isRefetching ? (
@@ -216,95 +216,95 @@ const AdminDonations: React.FC = () => {
           {isLoading ? (
             <div>Loading donations...</div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Donor</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Project</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Receipt</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredDonations.map((donation) => (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Donor</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Project</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Receipt</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredDonations.map((donation) => (
                   <TableRow key={donation._id}>
-                    <TableCell className="font-medium">
+                  <TableCell className="font-medium">
                       {donation.name}
-                      {donation.isRecurring && (
-                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                          Recurring
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>{donation.createdAt ? new Date(donation.createdAt).toLocaleDateString() : ''}</TableCell>
-                    <TableCell>₹{donation.amount.toLocaleString()}</TableCell>
-                    <TableCell>{donation.causeId?.name || 'General Fund'}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          donation.status === 'completed'
-                            ? 'bg-green-100 text-green-800'
-                            : donation.status === 'pending'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}
+                    {donation.isRecurring && (
+                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                        Recurring
                       </span>
-                    </TableCell>
-                    <TableCell>
+                    )}
+                  </TableCell>
+                    <TableCell>{donation.createdAt ? new Date(donation.createdAt).toLocaleDateString() : ''}</TableCell>
+                  <TableCell>₹{donation.amount.toLocaleString()}</TableCell>
+                    <TableCell>{donation.causeId?.name || 'General Fund'}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          donation.status === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                            : donation.status === 'pending'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}
+                    >
+                        {donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}
+                    </span>
+                  </TableCell>
+                  <TableCell>
                       {donation.receipt ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          Issued
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                          Pending
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewDetails(donation)}
-                        >
-                          Details
-                        </Button>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        Issued
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        Pending
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewDetails(donation)}
+                      >
+                        Details
+                      </Button>
                         {donation.status === 'completed' && !donation.receipt && (
-                          <Button
-                            size="sm"
-                            onClick={() => handleGenerateReceipt(donation)}
-                          >
-                            Issue Receipt
-                          </Button>
-                        )}
+                        <Button
+                          size="sm"
+                          onClick={() => handleGenerateReceipt(donation)}
+                        >
+                          Issue Receipt
+                        </Button>
+                      )}
                         {donation.status === 'pending' && (
-                          <Button
-                            variant="default"
-                            size="sm"
+                        <Button
+                          variant="default"
+                          size="sm"
                             onClick={() => handleUpdateStatus(donation._id, 'completed')}
-                          >
-                            Mark Complete
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {filteredDonations.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-6 text-gray-500">
-                      No donations found matching your search.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                        >
+                          Mark Complete
+                        </Button>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {filteredDonations.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-6 text-gray-500">
+                    No donations found matching your search.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
           )}
         </CardContent>
       </Card>
