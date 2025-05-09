@@ -15,6 +15,7 @@ interface User {
   role: string;
   designation?: string;
   level?: number;
+  accountType?: string;
   geo?: {
     country?: string;
     state?: string;

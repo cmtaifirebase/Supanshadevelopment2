@@ -132,6 +132,7 @@ const modules = [
   { id: "crowdFunding", label: "Crowd Funding" },
   { id: "forum", label: "Forum" },
   { id: "shop", label: "Shop" },
+  { id: "donations", label: "Donations" },
 ];
 
 const designations = [

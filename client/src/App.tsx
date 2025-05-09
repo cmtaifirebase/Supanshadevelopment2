@@ -291,6 +291,13 @@ function Router() {
           </AdminLayout>
         </PrivateRoute>
       </Route>
+      <Route path="/admin/donations">
+        <PrivateRoute>
+          <AdminLayout>
+            <AdminDonations />
+          </AdminLayout>
+        </PrivateRoute>
+      </Route>
       <Route path="/admin/crowd-funding">
         <PrivateRoute>
           <AdminLayout>
