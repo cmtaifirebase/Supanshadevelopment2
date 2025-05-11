@@ -6,7 +6,7 @@ import { API_BASE_URL } from '@/config';
 import { useToast } from '@/hooks/use-toast';
 import { queryClient } from '@/lib/queryClient';
 
-// Form schema matching backend validation
+// Form schema matching backend model
 const donationSchema = z.object({
   name: z.string().min(2, { message: 'Please enter your full name' }),
   email: z.string().email({ message: 'Please enter a valid email' }),
@@ -14,16 +14,9 @@ const donationSchema = z.object({
   amount: z.number()
     .min(100, { message: 'Minimum donation amount is ₹100' })
     .max(100000, { message: 'Maximum donation amount is ₹100,000' }),
-  message: z.string().min(5, { message: 'Please enter a message (minimum 5 characters)' }),
-  aadharNumber: z.string()
-    .length(12, "Aadhar number must be 12 digits")
-    .regex(/^\d+$/, "Aadhar number must contain only digits")
-    .optional()
-    .or(z.literal('')),
-  panCardNumber: z.string()
-    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN number format")
-    .optional()
-    .or(z.literal('')),
+  message: z.string().optional().default(''),
+  aadharNumber: z.string().optional().nullable(),
+  panCardNumber: z.string().optional().nullable(),
   acceptTerms: z.boolean().refine(val => val === true, {
     message: 'You must accept the terms and conditions',
   }),
@@ -33,9 +26,10 @@ type DonationFormValues = z.infer<typeof donationSchema>;
 
 interface DonationFormProps {
   selectedCauseId: string | null;
+  customCause: string | null;
 }
 
-const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
+const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId, customCause }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const { toast } = useToast();
@@ -54,8 +48,8 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
       phone: '',
       amount: 1000,
       message: '',
-      aadharNumber: '',
-      panCardNumber: '',
+      aadharNumber: null,
+      panCardNumber: null,
       acceptTerms: false,
     },
   });
@@ -64,7 +58,6 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
     setIsSubmitting(true);
 
     try {
-      // In a real implementation, this would integrate with Razorpay
       setPaymentProcessing(true);
       toast({
         title: 'Processing payment...',
@@ -78,8 +71,13 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
           const donationData = {
             ...data,
             causeId: selectedCauseId,
+            customCause: customCause,
             paymentId: 'pay_' + Math.random().toString(36).substring(2, 15),
             status: 'completed' as const,
+            // Ensure optional fields are null if empty
+            message: data.message || '',
+            aadharNumber: data.aadharNumber || null,
+            panCardNumber: data.panCardNumber || null,
           };
 
           const response = await fetch(`${API_BASE_URL}/api/donation`, {
@@ -90,23 +88,22 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
           });
 
           if (!response.ok) {
-            throw new Error('Failed to process donation');
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to process donation');
           }
 
           const result = await response.json();
 
           toast({
             title: 'Thank you for your donation!',
-            description: 'Your contribution will help create lasting impact.',
+            description: customCause 
+              ? `Your contribution to "${customCause}" will help create lasting impact.`
+              : 'Your contribution will help create lasting impact.',
           });
 
-          // Invalidate relevant queries
           queryClient.invalidateQueries({ queryKey: ['causes'] });
-          
-          // Reset the form
           reset();
 
-          // Show receipt if available
           if (result.donation?.receipt) {
             setTimeout(async () => {
               try {
@@ -130,7 +127,7 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
           console.error('Donation processing error:', error);
           toast({
             title: 'Donation Failed',
-            description: 'There was an error processing your donation. Please try again.',
+            description: error instanceof Error ? error.message : 'Failed to process donation. Please try again.',
             variant: 'destructive',
           });
         } finally {
@@ -230,6 +227,22 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
           </div>
         </div>
 
+        <div>
+          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+            Message (Optional)
+          </label>
+          <textarea
+            id="message"
+            rows={3}
+            className={`w-full p-3 border ${errors.message ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-primary focus:border-primary`}
+            placeholder="Add a message with your donation"
+            {...register('message')}
+          ></textarea>
+          {errors.message && (
+            <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label htmlFor="aadharNumber" className="block text-sm font-medium text-gray-700 mb-1">
@@ -262,22 +275,6 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
               <p className="mt-1 text-sm text-red-600">{errors.panCardNumber.message}</p>
             )}
           </div>
-        </div>
-
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-            Message *
-          </label>
-          <textarea
-            id="message"
-            rows={3}
-            className={`w-full p-3 border ${errors.message ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-primary focus:border-primary`}
-            placeholder="Add a message with your donation"
-            {...register('message')}
-          ></textarea>
-          {errors.message && (
-            <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
-          )}
         </div>
 
         <div className="flex items-start mt-4">

@@ -93,8 +93,8 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-      <div 
-        className="h-48 bg-cover bg-center" 
+        <div 
+          className="h-48 bg-cover bg-center" 
         style={{ 
           backgroundImage: `url(${event.eventPoster || 'https://via.placeholder.com/400x200'})`,
           filter: 'brightness(0.95)'
