@@ -59,7 +59,7 @@ const adminMenu: MenuItem[] = [
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [location] = useLocation();
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
   const [hovered, setHovered] = useState(false);
@@ -87,7 +87,7 @@ const Sidebar: React.FC = () => {
   const isActive = (href: string) => location === href;
 
   const shouldShowFull = !isCollapsed || hovered;
-  const sidebarWidth = isCollapsed && !hovered ? "w-16" : "w-64";
+  const sidebarWidth = isCollapsed && !hovered ? "w-20" : "w-72";
 
   const hasModuleAccess = (module: string) => {
     // Always allow access to profile module
@@ -113,28 +113,42 @@ const Sidebar: React.FC = () => {
     <>
       {/* Mobile Hamburger Button */}
       <button
-        className="fixed z-50 p-3 text-white bg-primary rounded-md md:hidden top-4 left-4 shadow-lg hover:bg-secondary transition-colors"
+        className="fixed z-50 p-3 text-white bg-primary rounded-md md:hidden top-4 left-4 shadow-lg hover:bg-secondary transition-all duration-300 ease-in-out transform hover:scale-105"
         onClick={toggleSidebar}
         aria-label="Toggle menu"
       >
         <FaBars className="w-5 h-5" />
       </button>
 
+      {/* Overlay for mobile */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-30 h-screen transition-all duration-500 ease-in-out bg-black text-white ${sidebarWidth} ${
+        className={`fixed top-0 left-0 z-30 h-screen transition-all duration-300 ease-in-out bg-gradient-to-b from-gray-900 to-black text-white shadow-xl ${
+          isCollapsed && !hovered ? "w-20" : "w-72"
+        } ${
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
         onMouseEnter={expandSidebar}
         onMouseLeave={collapseSidebar}
       >
         {/* Collapse Button */}
-        <div className={`flex items-center p-4 border-b border-secondary ${
+        <div className={`flex items-center p-4 border-b border-gray-700 ${
           isCollapsed && !hovered ? "justify-center" : "justify-between"
         }`}>
-          {shouldShowFull && <h2 className="text-xl font-bold">Admin Panel</h2>}
+          {shouldShowFull && (
+            <h2 className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Admin Panel
+            </h2>
+          )}
           <button 
-            className="hidden md:flex text-white hover:text-primary transition-colors"
+            className="hidden md:flex text-white hover:text-primary transition-all duration-300 transform hover:scale-110"
             onClick={toggleCollapse}
             aria-label="Toggle menu"
           >
@@ -142,15 +156,15 @@ const Sidebar: React.FC = () => {
           </button>
         </div>
 
-        <nav className="p-4 overflow-y-auto h-[calc(100vh-60px)]">
+        <nav className="p-4 overflow-y-auto h-[calc(100vh-60px)] scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
           {/* Home Link */}
           <Link
             href="/"
-            className={`flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 mb-4 transition-colors ${
+            className={`flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 mb-4 transition-all duration-300 ${
               isCollapsed && !hovered ? "justify-center" : "space-x-3"
-            }`}
+            } hover:shadow-lg hover:shadow-primary/20`}
           >
-            <FaHome className="text-primary" />
+            <FaHome className="text-primary transform transition-transform duration-300 hover:scale-110" />
             {shouldShowFull && <span className="font-medium">Public Site</span>}
           </Link>
 
@@ -161,38 +175,38 @@ const Sidebar: React.FC = () => {
                   <div>
                     <button
                       onClick={() => toggleSubmenu(item.label)}
-                      className={`flex items-center w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors ${
+                      className={`flex items-center w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300 ${
                         shouldShowFull ? "justify-between" : "justify-center"
                       } ${
                         expandedMenus.includes(item.label) || 
                         item.children.some(child => isActive(child.href))
-                          ? "bg-gray-800"
+                          ? "bg-gray-800 shadow-lg shadow-primary/20"
                           : ""
-                      }`}
+                      } hover:shadow-lg hover:shadow-primary/20`}
                     >
                       <span className={`flex items-center ${
                         shouldShowFull ? "space-x-3" : ""
                       }`}>
-                        <span className="text-primary">{item.icon}</span>
+                        <span className="text-primary transform transition-transform duration-300 hover:scale-110">{item.icon}</span>
                         {shouldShowFull && <span>{item.label}</span>}
                       </span>
                       {shouldShowFull && (
                         <FaChevronDown
-                          className={`transition-transform text-secondary ${
+                          className={`transition-all duration-300 text-secondary ${
                             expandedMenus.includes(item.label) ? "rotate-180" : ""
                           }`}
                         />
                       )}
                     </button>
                     {shouldShowFull && expandedMenus.includes(item.label) && (
-                      <ul className="pl-8 mt-1 space-y-1">
+                      <ul className="pl-8 mt-1 space-y-1 animate-fadeIn">
                         {item.children.map((child) => (
                           <li key={child.href}>
                             <Link
                               href={child.href}
-                              className={`block px-4 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors ${
-                                isActive(child.href) ? "bg-secondary" : ""
-                              }`}
+                              className={`block px-4 py-2 text-sm rounded-lg hover:bg-gray-800 transition-all duration-300 ${
+                                isActive(child.href) ? "bg-secondary shadow-lg shadow-secondary/20" : ""
+                              } hover:shadow-lg hover:shadow-primary/20`}
                             >
                               {child.label}
                             </Link>
@@ -204,13 +218,13 @@ const Sidebar: React.FC = () => {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors ${
+                    className={`flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300 ${
                       shouldShowFull ? "space-x-3" : "justify-center"
                     } ${
-                      isActive(item.href) ? "bg-secondary" : ""
-                    }`}
+                      isActive(item.href) ? "bg-secondary shadow-lg shadow-secondary/20" : ""
+                    } hover:shadow-lg hover:shadow-primary/20`}
                   >
-                    <span className="text-primary">{item.icon}</span>
+                    <span className="text-primary transform transition-transform duration-300 hover:scale-110">{item.icon}</span>
                     {shouldShowFull && <span>{item.label}</span>}
                   </Link>
                 )}

@@ -2,16 +2,61 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useQuery } from '@tanstack/react-query';
 import { GalleryImage } from '@/lib/types';
-import GalleryItem from '@/components/shared/gallery-item';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Gallery: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
 
-  const { data: galleryItems, isLoading } = useQuery<GalleryImage[]>({
+  const { data: apiGalleryItems, isLoading } = useQuery<GalleryImage[]>({
     queryKey: ['/api/gallery'],
   });
+
+  // Local gallery items
+  const localGalleryItems: GalleryImage[] = [
+    {
+      id: 101,
+      image: '/Gallery/1.jpg',
+      caption: 'Community Development',
+      category: 'Community'
+    },
+    {
+      id: 102,
+      image: '/Gallery/2.jpg',
+      caption: 'Education Initiative',
+      category: 'Education'
+    },
+    {
+      id: 103,
+      image: '/Gallery/3.jpg',
+      caption: 'Health Camp',
+      category: 'Health'
+    },
+    {
+      id: 104,
+      image: '/Gallery/4.jpg',
+      caption: 'Women Empowerment',
+      category: 'Empowerment'
+    },
+    {
+      id: 105,
+      image: '/Gallery/5.jpg',
+      caption: 'Environmental Care',
+      category: 'Ecocare'
+    },
+    {
+      id: 106,
+      image: '/Gallery/6.jpg',
+      caption: 'Water Conservation',
+      category: 'Water'
+    }
+  ];
+
+  // Combine both sets of images
+  const allGalleryItems = [
+    ...(apiGalleryItems || []),
+    ...localGalleryItems
+  ];
 
   const categories = [
     { id: 'all', name: 'All' },
@@ -24,8 +69,8 @@ const Gallery: React.FC = () => {
   ];
 
   const filteredGallery = activeCategory === 'all' 
-    ? galleryItems 
-    : galleryItems?.filter(item => item.category === activeCategory);
+    ? allGalleryItems 
+    : allGalleryItems.filter(item => item.category === activeCategory);
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -44,7 +89,7 @@ const Gallery: React.FC = () => {
 
       {/* Hero Banner */}
       <div className="relative py-24 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
-        <div className="absolute inset-0 opacity-20 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1540479859555-17af45c78602?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')" }}></div>
+        <div className="absolute inset-0 opacity-20 bg-cover bg-center" style={{ backgroundImage: "url('/Gallery/1.jpg')" }}></div>
         <div className="container mx-auto px-4 relative z-10">
           <h1 className="text-4xl md:text-5xl font-montserrat font-bold mb-4">Scenes of Change</h1>
           <p className="text-xl md:text-2xl max-w-3xl">
@@ -85,11 +130,20 @@ const Gallery: React.FC = () => {
               {filteredGallery && filteredGallery.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {filteredGallery.map(item => (
-                    <GalleryItem 
-                      key={item.id} 
-                      item={item} 
-                      onClick={openLightbox}
-                    />
+                    <div 
+                      key={item.id}
+                      className="relative overflow-hidden rounded-lg group h-64 cursor-pointer"
+                      onClick={() => openLightbox(item)}
+                    >
+                      <img 
+                        src={item.image} 
+                        alt={item.caption} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span className="text-white font-medium">{item.caption}</span>
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -161,7 +215,7 @@ const Gallery: React.FC = () => {
             Join us in creating sustainable impact and transforming lives.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="/donate" className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
+            <a href="/donate" className="bg-primary hover:bg-[#E94E77]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
               Donate Now
             </a>
             <a href="/volunteer" className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-3 rounded-md font-medium transition-colors">

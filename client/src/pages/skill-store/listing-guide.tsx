@@ -199,7 +199,7 @@ const ListingGuide: React.FC = () => {
               </div>
               
               <div className="pt-4">
-                <button className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-6 py-3 rounded-md font-medium transition-colors">
                   Register as a Seller
                 </button>
               </div>

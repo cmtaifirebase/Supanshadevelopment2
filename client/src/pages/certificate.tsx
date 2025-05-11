@@ -98,7 +98,7 @@ const CertificatePage: React.FC = () => {
                     <button 
                       type="submit"
                       disabled={isSearching}
-                      className="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
+                      className="w-full bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
                     >
                       {isSearching ? (
                         <>
@@ -146,7 +146,7 @@ const CertificatePage: React.FC = () => {
                           </div>
                           <button 
                             onClick={() => downloadCertificate(certificate)}
-                            className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+                            className="bg-primary hover:bg-[#E94E77]/90 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
                           >
                             Download
                           </button>
@@ -165,7 +165,7 @@ const CertificatePage: React.FC = () => {
                       <div className="mt-6">
                         <a 
                           href="/events" 
-                          className="inline-block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+                          className="inline-block bg-primary hover:bg-[#E94E77]/90 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
                         >
                           View Upcoming Events
                         </a>

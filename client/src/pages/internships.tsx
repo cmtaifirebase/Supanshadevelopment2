@@ -17,7 +17,7 @@ const Internships: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Program Development Intern</h3>
                 <p className="text-gray-600 mb-3">3-6 months · Delhi/Remote · Stipend provided</p>
                 <p className="mb-4">Support the design and implementation of community development programs, assist with monitoring and evaluation, and contribute to impact assessment.</p>
-                <button className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Apply Now
                 </button>
               </div>
@@ -26,7 +26,7 @@ const Internships: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Communications & Media Intern</h3>
                 <p className="text-gray-600 mb-3">3-6 months · Remote · Stipend provided</p>
                 <p className="mb-4">Create compelling content for social media, website, and other platforms to showcase our work and impact to diverse audiences.</p>
-                <button className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Apply Now
                 </button>
               </div>
@@ -35,7 +35,7 @@ const Internships: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Research & Advocacy Intern</h3>
                 <p className="text-gray-600 mb-3">3-6 months · Remote · Stipend provided</p>
                 <p className="mb-4">Conduct research on social issues, assist with policy analysis, and support advocacy initiatives to influence systemic change.</p>
-                <button className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Apply Now
                 </button>
               </div>

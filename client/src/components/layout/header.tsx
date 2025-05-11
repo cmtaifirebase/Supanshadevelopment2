@@ -74,7 +74,7 @@ const Header = () => {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img src="/src/assets/logo.webp" alt="Supansha Development Foundation" className="h-10 mr-2" />
+            <img src="logo.webp" alt="Supansha Development Foundation" className="h-10 mr-2" />
           </Link>
 
           {/* Desktop Navigation */}

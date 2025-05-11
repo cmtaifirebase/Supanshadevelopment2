@@ -43,7 +43,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             <span className="font-medium">Goal: ₹{goal.toLocaleString()}</span>
           </div>
         </div>
-        <Link href={`/projects/${id}`} className="inline-block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm font-medium transition-colors w-full text-center">
+        <Link href={`/projects/${id}`} className="inline-block bg-primary hover:bg-[#E94E77]/90 text-white px-4 py-2 rounded text-sm font-medium transition-colors w-full text-center">
           Learn More
         </Link>
       </div>

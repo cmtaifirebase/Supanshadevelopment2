@@ -17,7 +17,7 @@ const Forums: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Rural Development Dialogue</h3>
                 <p className="text-gray-600 mb-3">May 25, 2025 · Virtual · 10:00 AM - 12:00 PM IST</p>
                 <p className="mb-4">Join experts, community leaders, and practitioners to discuss innovative approaches to sustainable rural development in India.</p>
-                <button className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Register Now
                 </button>
               </div>
@@ -26,7 +26,7 @@ const Forums: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Climate Action & Communities</h3>
                 <p className="text-gray-600 mb-3">June 10, 2025 · Hybrid (Delhi & Virtual) · 2:00 PM - 4:30 PM IST</p>
                 <p className="mb-4">Explore the intersection of climate change and community resilience, with a focus on local solutions and indigenous knowledge.</p>
-                <button className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Register Now
                 </button>
               </div>
@@ -35,7 +35,7 @@ const Forums: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Digital Inclusion Forum</h3>
                 <p className="text-gray-600 mb-3">July 5, 2025 · Virtual · 11:00 AM - 1:30 PM IST</p>
                 <p className="mb-4">Discuss strategies for bridging the digital divide and ensuring equitable access to technology and digital resources.</p>
-                <button className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Register Now
                 </button>
               </div>
@@ -119,7 +119,7 @@ const Forums: React.FC = () => {
                 ></textarea>
               </div>
               
-              <button type="submit" className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+              <button type="submit" className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                 Submit Proposal
               </button>
             </form>

@@ -65,6 +65,7 @@ import AdminLayout from "@/layouts/AdminLayout";
 
 import Events from '@/pages/event';
 import EventDetails from '@/pages/event-details';
+import Shop from "@/pages/shop";
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -333,6 +334,12 @@ function Router() {
             <AdminContacts />
           </AdminLayout>
         </PrivateRoute>
+      </Route>
+
+      <Route path="/shop">
+        <PublicLayout>
+          <Shop />
+        </PublicLayout>
       </Route>
 
       {/* Catch-all */}

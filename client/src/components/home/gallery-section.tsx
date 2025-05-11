@@ -4,10 +4,50 @@ import { useQuery } from '@tanstack/react-query';
 import { GalleryImage } from '@/lib/types';
 
 const GallerySection: React.FC = () => {
-  const { data: galleryItems, isLoading } = useQuery<GalleryImage[]>({
+  const { data: apiGalleryItems, isLoading } = useQuery<GalleryImage[]>({
     queryKey: ['/api/gallery'],
     select: (data) => data.slice(0, 8), // Take only the first 8 items
   });
+
+  // Local gallery items
+  const localGalleryItems = [
+    {
+      id: 101,
+      image: '/Gallery/1.jpg',
+      caption: 'Community Development'
+    },
+    {
+      id: 102,
+      image: '/Gallery/2.jpg',
+      caption: 'Education Initiative'
+    },
+    {
+      id: 103,
+      image: '/Gallery/3.jpg',
+      caption: 'Health Camp'
+    },
+    {
+      id: 104,
+      image: '/Gallery/4.jpg',
+      caption: 'Women Empowerment'
+    },
+    {
+      id: 105,
+      image: '/Gallery/5.jpg',
+      caption: 'Environmental Care'
+    },
+    {
+      id: 106,
+      image: '/Gallery/6.jpg',
+      caption: 'Water Conservation'
+    }
+  ];
+
+  // Combine both sets of images
+  const allGalleryItems = [
+    ...(apiGalleryItems || []),
+    ...localGalleryItems
+  ];
 
   return (
     <section className="py-16 bg-white">
@@ -23,7 +63,7 @@ const GallerySection: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {galleryItems?.map((item) => (
+            {allGalleryItems.map((item) => (
               <div 
                 key={item.id} 
                 className="relative overflow-hidden rounded-lg group h-64"
@@ -44,7 +84,7 @@ const GallerySection: React.FC = () => {
         <div className="text-center mt-10">
           <Link 
             href="/gallery" 
-            className="inline-block bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium transition-colors"
+            className="inline-block bg-primary hover:bg-[#E94E77]/90 text-white px-6 py-3 rounded-md font-medium transition-colors"
           >
             View All Gallery
           </Link>

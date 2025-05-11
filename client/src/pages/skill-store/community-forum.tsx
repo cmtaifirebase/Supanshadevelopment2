@@ -224,7 +224,7 @@ const CommunityForum: React.FC = () => {
                 <h2 className="text-xl font-semibold">
                   {selectedCategory ? `Discussions in ${selectedCategory}` : 'All Discussions'}
                 </h2>
-                <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md text-sm transition-colors">
+                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-4 py-2 rounded-md text-sm transition-colors">
                   New Discussion
                 </button>
               </div>

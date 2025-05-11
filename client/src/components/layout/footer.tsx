@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div>
             <div className="mb-4">
-              <img src="/src/assets/logo.webp" alt="Supansha Development Foundation" className="h-12" />
+              <img src="logo.webp" alt="Supansha Development Foundation" className="h-12" />
             </div>
             <p className="text-gray-400 mb-4">Social Union for Progressive Advancement and Navigation towards Sustainable Holistic Actions.</p>
             <div className="flex space-x-4">
@@ -122,7 +122,7 @@ const Footer: React.FC = () => {
                 />
                 <button 
                   type="submit" 
-                  className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-md transition-colors"
+                  className="bg-primary hover:bg-[#E94E77]/90 text-white px-4 py-2 rounded-r-md transition-colors"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (

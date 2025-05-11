@@ -75,7 +75,7 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ variant = 'default', cl
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-md transition-colors"
+          className="bg-primary hover:bg-[#E94E77]/90 text-white px-4 py-2 rounded-r-md transition-colors"
         >
           {isSubmitting ? (
             <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -112,7 +112,7 @@ const NewsletterForm: React.FC<NewsletterFormProps> = ({ variant = 'default', cl
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
+        className="w-full bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
       >
         {isSubmitting ? (
           <>

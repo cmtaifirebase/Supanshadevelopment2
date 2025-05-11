@@ -20,14 +20,14 @@ const AboutMini: React.FC = () => {
             </p>
             <Link 
               href="/about" 
-              className="inline-block bg-primary hover:bg-primary/90 text-white px-5 py-3 rounded-md font-medium transition-colors"
+              className="inline-block bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-3 rounded-md font-medium transition-colors"
             >
               Read More
             </Link>
           </div>
           <div className="order-1 lg:order-2">
             <img 
-              src="https://images.unsplash.com/photo-1607462109225-6b64ae2dd3cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+              src="home/about.jpg" 
               alt="Supansha team and community activity" 
               className="rounded-lg shadow-lg w-full h-auto object-cover" 
             />

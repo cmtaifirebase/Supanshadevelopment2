@@ -108,8 +108,22 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
 
           // Show receipt if available
           if (result.donation?.receipt) {
-            setTimeout(() => {
-              window.open(result.donation.receipt, '_blank');
+            setTimeout(async () => {
+              try {
+                const response = await fetch(result.donation.receipt);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Donation-Receipt.pdf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+              } catch (err) {
+                // fallback: open in new tab if download fails
+                window.open(result.donation.receipt, '_blank');
+              }
             }, 1000);
           }
         } catch (error) {
@@ -297,7 +311,7 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
+          className="w-full bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
         >
           {isSubmitting ? (
             <>

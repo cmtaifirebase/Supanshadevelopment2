@@ -195,7 +195,7 @@ const VolunteerForm: React.FC = () => {
             <button
               type="button"
               onClick={nextStep}
-              className="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-md font-medium transition-colors"
+              className="w-full bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors"
             >
               Continue
             </button>
@@ -303,7 +303,7 @@ const VolunteerForm: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-1/2 bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
+              className="w-1/2 bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
             >
               {isSubmitting ? (
                 <>

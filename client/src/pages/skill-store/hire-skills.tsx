@@ -125,7 +125,7 @@ const SkillProviderCard: React.FC<{ provider: any }> = ({ provider }) => {
           </div>
           
           <div className="flex justify-end mt-3">
-            <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md text-sm transition-colors">
+            <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-4 py-2 rounded-md text-sm transition-colors">
               Contact
             </button>
           </div>
