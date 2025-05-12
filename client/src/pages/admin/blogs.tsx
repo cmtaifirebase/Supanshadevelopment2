@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   fetchBlogs,
@@ -102,6 +102,8 @@ const AdminBlogs: React.FC = () => {
   });
   const [openCategory, setOpenCategory] = useState(false);
   const [openEditCategory, setOpenEditCategory] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Fetch blogs query
   const {
@@ -194,13 +196,22 @@ const AdminBlogs: React.FC = () => {
         blog.status.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
 
-  const handleAddBlog = () => {
-    const submitData: CreateBlogRequest = {
-      ...newBlog,
-      seoKeywords: newBlog.seoKeywords.split(',').map(item => item.trim()).filter(Boolean),
-      tags: newBlog.tags.split(',').map(item => item.trim()).filter(Boolean),
-    };
-    createBlogMutation.mutate(submitData);
+  const handleAddBlog = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', newBlog.title ?? '');
+    formData.append('category', newBlog.category ?? '');
+    formData.append('content', newBlog.content ?? '');
+    formData.append('status', newBlog.status ?? '');
+    formData.append('metaDescription', newBlog.metaDescription ?? '');
+    formData.append('seoKeywords', newBlog.seoKeywords ?? '');
+    formData.append('tags', newBlog.tags ?? '');
+    formData.append('audioRequired', String(newBlog.audioRequired ?? false));
+    formData.append('publishDate', newBlog.publishDate ?? '');
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    createBlogMutation.mutate(formData as any);
   };
 
   const handleUpdateBlog = (blogId: string, data: UpdateBlogRequest) => {
@@ -400,6 +411,15 @@ const AdminBlogs: React.FC = () => {
                       }
                     />
                     <Label htmlFor="audioRequired">Audio Required</Label>
+                  </div>
+                  <div>
+                    <Label>Image</Label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={imageInputRef}
+                      onChange={e => setImageFile(e.target.files?.[0] || null)}
+                    />
                   </div>
                   <DialogFooter className="sticky bottom-0 bg-background pt-4">
                     <Button type="submit">Create Blog</Button>
@@ -607,7 +627,7 @@ const AdminBlogs: React.FC = () => {
                   }
                 />
               </div>
-      <div>
+              <div>
                 <Label>Tags (comma-separated)</Label>
                 <Input
                   value={selectedBlog.tags?.join(", ")}
@@ -637,8 +657,8 @@ const AdminBlogs: React.FC = () => {
           )}
         </DialogContent>
       </Dialog>
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default AdminBlogs; 

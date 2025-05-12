@@ -25,11 +25,12 @@ const donationSchema = z.object({
 type DonationFormValues = z.infer<typeof donationSchema>;
 
 interface DonationFormProps {
-  selectedCauseId: string | null;
+  causeSlug: string | null;
   customCause: string | null;
+  lockedCause?: { id: string | null, label: string } | null;
 }
 
-const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId, customCause }) => {
+const DonationForm: React.FC<DonationFormProps> = ({ causeSlug, customCause, lockedCause }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const { toast } = useToast();
@@ -64,17 +65,24 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId, customCaus
         description: 'Please wait while we process your donation.',
       });
 
-      // Simulate payment processing
       setTimeout(async () => {
         try {
-          // Process donation after payment
+          let causeSlugToSend = causeSlug;
+          let customCauseToSend = customCause;
+          if (lockedCause) {
+            causeSlugToSend = lockedCause.label ? lockedCause.label : undefined;
+            customCauseToSend = lockedCause.id ? null : lockedCause.label;
+          }
+          if (!causeSlugToSend && !customCauseToSend) {
+            customCauseToSend = 'General';
+          }
+
           const donationData = {
             ...data,
-            causeId: selectedCauseId,
-            customCause: customCause,
+            causeSlug: causeSlugToSend,
+            customCause: customCauseToSend,
             paymentId: 'pay_' + Math.random().toString(36).substring(2, 15),
             status: 'completed' as const,
-            // Ensure optional fields are null if empty
             message: data.message || '',
             aadharNumber: data.aadharNumber || null,
             panCardNumber: data.panCardNumber || null,
@@ -96,8 +104,8 @@ const DonationForm: React.FC<DonationFormProps> = ({ selectedCauseId, customCaus
 
           toast({
             title: 'Thank you for your donation!',
-            description: customCause 
-              ? `Your contribution to "${customCause}" will help create lasting impact.`
+            description: customCauseToSend 
+              ? `Your contribution to "${customCauseToSend}" will help create lasting impact.`
               : 'Your contribution will help create lasting impact.',
           });
 

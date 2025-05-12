@@ -490,15 +490,18 @@ interface DonationStats {
   };
 
   // Create new blog
-  export const createBlog = async (blogData: CreateBlogRequest): Promise<{ success: boolean; blog: Blog }> => {
-    const res = await fetch(`${API_BASE_URL}/api/blog`, {
+  export const createBlog = async (blogData: any): Promise<{ success: boolean; blog: Blog }> => {
+    let options: RequestInit = {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(blogData),
-    });
+      body: blogData,
+    };
+    // Only set Content-Type if not FormData
+    if (!(blogData instanceof FormData)) {
+      options.headers = { 'Content-Type': 'application/json' };
+      options.body = JSON.stringify(blogData);
+    }
+    const res = await fetch(`${API_BASE_URL}/api/blog`, options);
 
     if (!res.ok) {
       throw new Error(`Failed to create blog: ${res.statusText}`);

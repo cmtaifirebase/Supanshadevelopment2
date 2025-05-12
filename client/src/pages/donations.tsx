@@ -26,6 +26,7 @@ interface Donation {
   panCardNumber: string | null;
   createdAt: string;
   updatedAt: string;
+  causeSlug: string | null;
 }
 
 interface DonationsResponse {
@@ -44,7 +45,7 @@ const Donations: React.FC = () => {
       if (!isAuthenticated || !user) {
         throw new Error('Not authenticated');
       }
-      const response = await fetch(`${API_BASE_URL}/api/donations/user/${user._id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/donation/user/${user._id}`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -128,9 +129,9 @@ const Donations: React.FC = () => {
                         </div>
                         <h3 className="text-lg font-semibold mb-1">₹{donation.amount.toLocaleString()}</h3>
                         <p className="text-gray-600 text-sm mb-2">{donation.message}</p>
-                        {donation.causeId && (
-                          <p className="text-sm text-gray-500">Cause: {donation.causeId}</p>
-                        )}
+                        <p className="text-sm text-gray-500">
+                          Cause: {donation.causeSlug || 'General'}
+                        </p>
                       </div>
                       <div className="flex items-center gap-3">
                         {donation.receipt && (

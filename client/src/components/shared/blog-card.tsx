@@ -17,6 +17,7 @@ interface BlogCardProps {
     authorId: string;
     createdAt: string;
     updatedAt: string;
+    imageLink?: string;
   };
 }
 
@@ -33,6 +34,13 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
   return (
     <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <Link href={`/blog/${slug}`} className="block">
+        {post.imageLink && (
+          <img
+            src={post.imageLink}
+            alt={title}
+            className="w-full h-48 object-cover rounded-t-lg mb-2"
+          />
+        )}
         <div className="p-6">
           <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full">
