@@ -22,6 +22,7 @@ interface BlogPost {
   createdAt: string;
   updatedAt: string;
   audioRequired: boolean;
+  imageLink?: string;
 }
 
 interface BlogResponse {
@@ -83,6 +84,13 @@ const BlogPost: React.FC = () => {
 
       <article className="min-h-screen bg-gray-50 py-12">
         <div className="container mx-auto px-4 max-w-4xl">
+          {blog.imageLink && (
+            <img
+              src={blog.imageLink}
+              alt={blog.title}
+              className="w-full max-h-96 object-cover rounded-lg mb-8"
+            />
+          )}
           {/* Header */}
           <header className="mb-8">
             <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
