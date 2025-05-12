@@ -57,12 +57,23 @@ const adminMenu: MenuItem[] = [
   { label: "Contacts", icon: <FaComments />, href: "/admin/contacts", module: "contacts" },
 ];
 
-const Sidebar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(true);
+interface SidebarProps {
+  isOpen: boolean;
+  onToggle: (isOpen: boolean) => void;
+  isMobile: boolean;
+  isCollapsed: boolean;
+  onCollapse: (isCollapsed: boolean) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ 
+  isOpen, 
+  onToggle, 
+  isMobile, 
+  isCollapsed, 
+  onCollapse 
+}) => {
   const [location] = useLocation();
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
-  const [hovered, setHovered] = useState(false);
   const { user } = useAuth();
 
   const { data: permissions } = useQuery({
@@ -70,11 +81,6 @@ const Sidebar: React.FC = () => {
     queryFn: () => user?._id ? getUserPermissions(user._id) : Promise.resolve({ success: true, permissions: {} as Record<string, { read: boolean }> }),
     enabled: !!user?._id,
   });
-
-  const toggleSidebar = () => setIsOpen(!isOpen);
-  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
-  const expandSidebar = () => setHovered(true);
-  const collapseSidebar = () => setHovered(false);
 
   const toggleSubmenu = (label: string) => {
     setExpandedMenus((prev) =>
@@ -86,8 +92,8 @@ const Sidebar: React.FC = () => {
 
   const isActive = (href: string) => location === href;
 
-  const shouldShowFull = !isCollapsed || hovered;
-  const sidebarWidth = isCollapsed && !hovered ? "w-16" : "w-64";
+  const shouldShowFull = !isCollapsed;
+  const sidebarWidth = isCollapsed ? "w-16" : "w-64";
 
   const hasModuleAccess = (module: string) => {
     // Always allow access to profile module
@@ -111,35 +117,17 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Mobile Hamburger Button */}
-      <button
-        className="fixed z-50 p-3 text-white bg-primary rounded-md md:hidden top-4 left-4 shadow-lg hover:bg-secondary transition-colors"
-        onClick={toggleSidebar}
-        aria-label="Toggle menu"
-      >
-        <FaBars className="w-5 h-5" />
-      </button>
-
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-30 h-screen transition-all duration-500 ease-in-out bg-black text-white ${sidebarWidth} ${
+        className={`fixed top-0 left-0 z-30 h-screen transition-all duration-300 ease-in-out bg-black text-white ${sidebarWidth} ${
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
-        onMouseEnter={expandSidebar}
-        onMouseLeave={collapseSidebar}
       >
-        {/* Collapse Button */}
+        {/* Header */}
         <div className={`flex items-center p-4 border-b border-secondary ${
-          isCollapsed && !hovered ? "justify-center" : "justify-between"
+          isCollapsed ? "justify-center" : "justify-between"
         }`}>
           {shouldShowFull && <h2 className="text-xl font-bold">Admin Panel</h2>}
-          <button 
-            className="hidden md:flex text-white hover:text-primary transition-colors"
-            onClick={toggleCollapse}
-            aria-label="Toggle menu"
-          >
-            <FaBars className="w-5 h-5" />
-          </button>
         </div>
 
         <nav className="p-4 overflow-y-auto h-[calc(100vh-60px)]">
@@ -147,7 +135,7 @@ const Sidebar: React.FC = () => {
           <Link
             href="/"
             className={`flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 mb-4 transition-colors ${
-              isCollapsed && !hovered ? "justify-center" : "space-x-3"
+              isCollapsed ? "justify-center" : "space-x-3"
             }`}
           >
             <FaHome className="text-primary" />

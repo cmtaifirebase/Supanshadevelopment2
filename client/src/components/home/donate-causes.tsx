@@ -8,11 +8,27 @@ const DonateCauses: React.FC = () => {
   const { data: causes, isLoading, error } = useQuery<{ success: boolean; causes: Cause[] }>({
     queryKey: ['causes'],
     queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/api/cause/active`, {
-        credentials: 'include',
-      });
-      if (!response.ok) throw new Error('Failed to fetch causes');
-      return response.json();
+      try {
+        console.log("api url",API_BASE_URL)
+        const response = await fetch(`${API_BASE_URL}/api/cause/active`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {  
+            'Accept': 'application/json',
+          }
+        });
+        console.log("response",response)
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching causes:', error);
+        throw error;
+      }
     },
   });
 
