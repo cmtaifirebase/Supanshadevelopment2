@@ -2,10 +2,26 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import VolunteerForm from '@/components/forms/volunteer-form';
 import { useQuery } from '@tanstack/react-query';
-
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '@/config';
 const Volunteer: React.FC = () => {
-  const { data: upcomingEvents } = useQuery({
+  const { toast } = useToast();
+
+  const { data: upcomingEvents, isLoading: isEventsLoading } = useQuery({
     queryKey: ['/api/events/upcoming'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/events/upcoming`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch upcoming events');
+      }
+      return response.json();
+    },
   });
 
   return (
@@ -81,7 +97,11 @@ const Volunteer: React.FC = () => {
               <div className="bg-white rounded-lg shadow-lg p-8">
                 <h3 className="text-xl font-montserrat font-semibold mb-4">Upcoming Volunteer Opportunities</h3>
                 
-                {upcomingEvents && upcomingEvents.length > 0 ? (
+                {isEventsLoading ? (
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                  </div>
+                ) : upcomingEvents && upcomingEvents.length > 0 ? (
                   <div className="space-y-4">
                     {upcomingEvents.slice(0, 3).map((event: any) => (
                       <div key={event.id} className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">

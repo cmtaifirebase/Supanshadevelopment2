@@ -31,6 +31,7 @@ import {
 import { useLocation } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { API_BASE_URL } from '@/config';
 
 const modules = [
   { label: "Dashboard", icon: <FaTachometerAlt />, href: "/admin/dashboard", module: "dashboard" },
@@ -114,6 +115,38 @@ const AdminDashboard: React.FC = () => {
     enabled: hasModuleAccess("activities"),
   });
 
+  // Active Volunteers Query
+  const {
+    data: activeVolunteers,
+    isLoading: isVolunteersLoading,
+    isError: isVolunteersError,
+    refetch: refetchActiveVolunteers,
+    isRefetching: isRefetchingVolunteers,
+  } = useQuery({
+    queryKey: ["activeVolunteers"],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/volunteers`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to fetch volunteers');
+      }
+
+      const data = await response.json();
+      return {
+        activeCount: data.data.filter((v: any) => v.status === 'Active').length,
+        totalCount: data.data.length,
+        volunteers: data.data,
+      };
+    },
+    enabled: hasModuleAccess("volunteers"),
+  });
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="mb-8">
@@ -143,15 +176,21 @@ const AdminDashboard: React.FC = () => {
           />
         )}
         {hasModuleAccess("volunteers") && (
-        <DashboardCard
-          title="Active Volunteers"
-            value={recentActivities?.activeCount?.toString() || "0"}
-            change={recentActivities?.change || "0%"}
-            description={recentActivities?.description || ""}
-          icon="👥"
-            onRefresh={refetchRecentActivities}
-            isRefreshing={isRefetchingActivities}
-        />
+          <DashboardCard
+            title="Active Volunteers"
+            value={
+              isVolunteersLoading || isRefetchingVolunteers
+                ? "Loading..."
+                : isVolunteersError
+                ? "Error"
+                : activeVolunteers?.activeCount?.toString() || "0"
+            }
+            change={`${activeVolunteers?.activeCount || 0}/${activeVolunteers?.totalCount || 0}`}
+            description="Total active volunteers"
+            icon="👥"
+            onRefresh={refetchActiveVolunteers}
+            isRefreshing={isRefetchingVolunteers}
+          />
         )}
         {hasModuleAccess("projects") && (
         <DashboardCard
@@ -329,31 +368,67 @@ const AdminDashboard: React.FC = () => {
               </TabsList>
               <TabsContent value="volunteers" className="py-4">
                 <div className="grid grid-cols-3 gap-4 mb-4">
-                  <StatCard title="Total Volunteers" value={recentActivities?.activeCount?.toString() || "0"} />
-                  <StatCard title="New This Month" value={recentActivities?.newThisMonth?.toString() || "0"} />
+                  <StatCard 
+                    title="Total Volunteers" 
+                    value={
+                      isVolunteersLoading
+                        ? "Loading..."
+                        : activeVolunteers?.totalCount?.toString() || "0"
+                    } 
+                  />
+                  <StatCard 
+                    title="Active Volunteers" 
+                    value={
+                      isVolunteersLoading
+                        ? "Loading..."
+                        : activeVolunteers?.activeCount?.toString() || "0"
+                    } 
+                  />
+                  <StatCard 
+                    title="Pending Volunteers" 
+                    value={
+                      isVolunteersLoading
+                        ? "Loading..."
+                        : (activeVolunteers?.volunteers?.filter((v: any) => v.status === 'Pending').length || 0).toString()
+                    } 
+                  />
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
                       <tr className="border-b">
                         <th className="text-left py-3 px-2">Name</th>
-                        <th className="text-left py-3 px-2">Program</th>
                         <th className="text-left py-3 px-2">Location</th>
                         <th className="text-left py-3 px-2">Hours</th>
                         <th className="text-left py-3 px-2">Status</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {recentActivities?.activeVolunteers?.map((volunteer, index) => (
-                        <tr key={index} className="border-b hover:bg-gray-50">
+                      {isVolunteersLoading ? (
+                        <tr>
+                          <td colSpan={4} className="text-center py-4">Loading volunteers...</td>
+                        </tr>
+                      ) : isVolunteersError ? (
+                        <tr>
+                          <td colSpan={4} className="text-center py-4 text-red-500">
+                            Error loading volunteers.{" "}
+                            <button
+                              onClick={() => refetchActiveVolunteers()}
+                              className="text-blue-500 hover:underline"
+                            >
+                              Retry
+                            </button>
+                          </td>
+                        </tr>
+                      ) : activeVolunteers?.volunteers?.slice(0, 5).map((volunteer: any) => (
+                        <tr key={volunteer._id} className="border-b hover:bg-gray-50">
                           <td className="py-2 px-2">{volunteer.name}</td>
-                          <td className="py-2 px-2">{volunteer.program}</td>
                           <td className="py-2 px-2">{volunteer.location}</td>
                           <td className="py-2 px-2">{volunteer.hours}</td>
-                        <td className="py-2 px-2">
-                            <StatusBadge status={volunteer.status} />
-                        </td>
-                      </tr>
+                          <td className="py-2 px-2">
+                            <StatusBadge status={volunteer.status.toLowerCase()} />
+                          </td>
+                        </tr>
                       ))}
                     </tbody>
                   </table>

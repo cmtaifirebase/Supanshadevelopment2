@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { apiRequest } from '@/lib/queryClient';
+import { useMutation } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
+import { API_BASE_URL } from '@/config';
 
 // Form schema
 const volunteerSchema = z.object({
@@ -13,9 +14,9 @@ const volunteerSchema = z.object({
   age: z.number()
     .min(18, { message: 'You must be at least 18 years old' })
     .max(80, { message: 'Please enter a valid age' }),
-  city: z.string().min(2, { message: 'Please enter your city' }),
+  location: z.string().min(2, { message: 'Please enter your location' }),
   interests: z.array(z.string()).min(1, { message: 'Please select at least one area of interest' }),
-  experience: z.string().optional(),
+  skills: z.string().optional(),
   availability: z.string().min(1, { message: 'Please select your availability' }),
   acceptTerms: z.boolean().refine(val => val === true, {
     message: 'You must accept the terms and conditions',
@@ -25,7 +26,6 @@ const volunteerSchema = z.object({
 type VolunteerFormValues = z.infer<typeof volunteerSchema>;
 
 const VolunteerForm: React.FC = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const [step, setStep] = useState(1);
 
@@ -42,9 +42,9 @@ const VolunteerForm: React.FC = () => {
       email: '',
       phone: '',
       age: 25,
-      city: '',
+      location: '',
       interests: [],
-      experience: '',
+      skills: '',
       availability: '',
       acceptTerms: false,
     },
@@ -73,31 +73,43 @@ const VolunteerForm: React.FC = () => {
     { value: 'remote', label: 'Remote Only' },
   ];
 
-  const onSubmit = async (data: VolunteerFormValues) => {
-    setIsSubmitting(true);
+  const createVolunteerMutation = useMutation({
+    mutationFn: async (data: VolunteerFormValues) => {
+      const response = await fetch(`${API_BASE_URL}/api/volunteers`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    try {
-      const response = await apiRequest('POST', '/api/volunteer/register', data);
-      const result = await response.json();
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to submit volunteer application');
+      }
 
+      return response.json();
+    },
+    onSuccess: () => {
       toast({
         title: 'Application Submitted!',
-        description: result.message || 'Your volunteer application has been received. We will contact you soon.',
+        description: 'Your volunteer application has been received. We will contact you soon.',
       });
-
-      // Reset the form and go back to step 1
       reset();
       setStep(1);
-    } catch (error) {
-      console.error('Form submission error:', error);
+    },
+    onError: (error: Error) => {
       toast({
         title: 'Submission Failed',
-        description: 'There was an error submitting your application. Please try again.',
+        description: error.message || 'There was an error submitting your application. Please try again.',
         variant: 'destructive',
       });
-    } finally {
-      setIsSubmitting(false);
-    }
+    },
+  });
+
+  const onSubmit = (data: VolunteerFormValues) => {
+    createVolunteerMutation.mutate(data);
   };
 
   const nextStep = () => {
@@ -176,26 +188,26 @@ const VolunteerForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-              City
+            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+              Location
             </label>
             <input
-              id="city"
+              id="location"
               type="text"
-              className={`w-full p-3 border ${errors.city ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-primary focus:border-primary`}
-              placeholder="Enter your city"
-              {...register('city')}
+              className={`w-full p-3 border ${errors.location ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-primary focus:border-primary`}
+              placeholder="Enter your location"
+              {...register('location')}
             />
-            {errors.city && (
-              <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>
+            {errors.location && (
+              <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
             )}
           </div>
 
-          <div className="mt-6">
+          <div>
             <button
               type="button"
               onClick={nextStep}
-              className="w-full bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors"
+              className="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-md font-medium transition-colors"
             >
               Continue
             </button>
@@ -229,15 +241,15 @@ const VolunteerForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">
-              Relevant Experience (Optional)
+            <label htmlFor="skills" className="block text-sm font-medium text-gray-700 mb-1">
+              Skills (Optional)
             </label>
             <textarea
-              id="experience"
+              id="skills"
               rows={3}
               className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
-              placeholder="Tell us about any previous volunteer experience or relevant skills"
-              {...register('experience')}
+              placeholder="Tell us about your skills and expertise"
+              {...register('skills')}
             ></textarea>
           </div>
 
@@ -266,7 +278,7 @@ const VolunteerForm: React.FC = () => {
             )}
           </div>
 
-          <div className="flex items-start mt-4">
+          <div>
             <div className="flex items-center h-5">
               <input
                 id="acceptTerms"
@@ -292,7 +304,7 @@ const VolunteerForm: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex gap-4 mt-6">
+          <div className="flex space-x-4">
             <button
               type="button"
               onClick={prevStep}
@@ -302,10 +314,10 @@ const VolunteerForm: React.FC = () => {
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="w-1/2 bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
+              disabled={createVolunteerMutation.isPending}
+              className="w-1/2 bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
             >
-              {isSubmitting ? (
+              {createVolunteerMutation.isPending ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

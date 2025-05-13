@@ -47,19 +47,23 @@ const AdminVolunteers: React.FC = () => {
     const fetchVolunteers = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/volunteers`, {
+          credentials: 'include',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+            'Content-Type': 'application/json',
+          },
         });
         
-        if (!response.ok) throw new Error('Failed to fetch volunteers');
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to fetch volunteers');
+        }
         
         const data = await response.json();
         setVolunteers(data.data);
       } catch (error) {
         toast({
           title: "Error",
-          description: "Failed to load volunteers",
+          description: error instanceof Error ? error.message : "Failed to load volunteers",
           variant: "destructive"
         });
       } finally {
@@ -96,14 +100,17 @@ const AdminVolunteers: React.FC = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/volunteers/${id}/status`, {
         method: 'PATCH',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({ status: newStatus })
       });
       
-      if (!response.ok) throw new Error('Failed to update status');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update status');
+      }
       
       const updatedVolunteer = await response.json();
       setVolunteers(volunteers.map(v => 
@@ -114,14 +121,14 @@ const AdminVolunteers: React.FC = () => {
         setSelectedVolunteer(updatedVolunteer.data);
       }
     
-    toast({
-      title: "Status Updated",
-      description: `Volunteer status has been updated to ${newStatus}`,
-    });
+      toast({
+        title: "Status Updated",
+        description: `Volunteer status has been updated to ${newStatus}`,
+      });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update volunteer status",
+        description: error instanceof Error ? error.message : "Failed to update volunteer status",
         variant: "destructive"
       });
     }
@@ -133,14 +140,17 @@ const AdminVolunteers: React.FC = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/volunteers/${selectedVolunteer._id}/notes`, {
         method: 'PATCH',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({ notes })
       });
       
-      if (!response.ok) throw new Error('Failed to save notes');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save notes');
+      }
       
       const updatedVolunteer = await response.json();
       setVolunteers(volunteers.map(v => 
@@ -155,7 +165,7 @@ const AdminVolunteers: React.FC = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to save notes",
+        description: error instanceof Error ? error.message : "Failed to save notes",
         variant: "destructive"
       });
     }
