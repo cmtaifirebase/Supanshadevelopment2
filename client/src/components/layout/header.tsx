@@ -10,7 +10,7 @@ const Header = () => {
 
   const toggleMenu = (menuName: string) => {
     setActiveMenu(activeMenu === menuName ? null : menuName);
-    
+
     // If a menu is being opened, close the mobile menu if it's open
     if (activeMenu !== menuName && mobileMenuOpen) {
       setMobileMenuOpen(false);
@@ -19,7 +19,7 @@ const Header = () => {
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
-    
+
     // If mobile menu is being opened, close any active mega menu
     if (!mobileMenuOpen && activeMenu) {
       setActiveMenu(null);
@@ -62,7 +62,7 @@ const Header = () => {
     } else {
       document.body.style.overflow = '';
     }
-    
+
     return () => {
       document.body.style.overflow = '';
     };
@@ -79,38 +79,21 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            <div className="group relative" data-menu="purpose">
-              <button 
-                className={`nav-item flex items-center font-montserrat text-sm ${activeMenu === 'purpose' ? 'text-[#F14B05]' : ''}`}
-                onClick={() => toggleMenu('purpose')}
-                aria-expanded={activeMenu === 'purpose'}
-                aria-controls="mega-menu-purpose"
-              >
-                Spark of Purpose
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className={`h-4 w-4 ml-1 transition-transform ${activeMenu === 'purpose' ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
+          <Link href="/about" className="nav-item font-montserrat text-sm">About Us</Link>
+
             <div className="group relative" data-menu="impact">
-              <button 
+              <button
                 className={`nav-item flex items-center font-montserrat text-sm ${activeMenu === 'impact' ? 'text-[#F14B05]' : ''}`}
                 onClick={() => toggleMenu('impact')}
                 aria-expanded={activeMenu === 'impact'}
                 aria-controls="mega-menu-impact"
               >
                 Stories of Impact
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
                   className={`h-4 w-4 ml-1 transition-transform ${activeMenu === 'impact' ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -118,18 +101,18 @@ const Header = () => {
               </button>
             </div>
             <div className="group relative" data-menu="change">
-              <button 
+              <button
                 className={`nav-item flex items-center font-montserrat text-sm ${activeMenu === 'change' ? 'text-[#F14B05]' : ''}`}
                 onClick={() => toggleMenu('change')}
                 aria-expanded={activeMenu === 'change'}
                 aria-controls="mega-menu-change"
               >
                 Stand for Change
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
                   className={`h-4 w-4 ml-1 transition-transform ${activeMenu === 'change' ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -137,18 +120,18 @@ const Header = () => {
               </button>
             </div>
             <div className="group relative" data-menu="future">
-              <button 
+              <button
                 className={`nav-item flex items-center font-montserrat text-sm ${activeMenu === 'future' ? 'text-[#F14B05]' : ''}`}
                 onClick={() => toggleMenu('future')}
                 aria-expanded={activeMenu === 'future'}
                 aria-controls="mega-menu-future"
               >
                 Shape the Future
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
                   className={`h-4 w-4 ml-1 transition-transform ${activeMenu === 'future' ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -165,8 +148,8 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
-            className="lg:hidden text-white" 
+          <button
+            className="lg:hidden text-white"
             id="mobile-menu-button"
             onClick={toggleMobileMenu}
             aria-expanded={mobileMenuOpen}

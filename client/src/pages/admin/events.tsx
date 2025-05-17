@@ -1,15 +1,12 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   Dialog,
   DialogContent,
@@ -17,216 +14,265 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { fetchEvents, createEvent, updateEvent, deleteEvent, Event, CreateEventRequest, UpdateEventRequest } from '@/lib/api';
-import { format } from 'date-fns';
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { useToast } from "@/hooks/use-toast"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
+  fetchEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  type Event,
+  type CreateEventRequest,
+  type UpdateEventRequest,
+} from "@/lib/api"
+import { format } from "date-fns"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
 
-type ApprovalStatus = 'Draft' | 'Pending' | 'Approved';
+type ApprovalStatus = "Draft" | "Pending" | "Approved"
 
-type FormData = Omit<CreateEventRequest, 'targetAudience' | 'sponsorLogos' | 'sponsorLogoOrder' | 'eventDocuments'> & {
-  targetAudience: string;
-  sponsorLogos: string;
-  sponsorLogoOrder: string;
-  eventDocuments: string;
-};
+type FormData = Omit<CreateEventRequest, "targetAudience" | "sponsorLogos" | "sponsorLogoOrder" | "eventDocuments"> & {
+  targetAudience: string
+  sponsorLogos: string
+  sponsorLogoOrder: string
+  eventDocuments: string
+}
 
 export default function AdminEvents() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const [searchTerm, setSearchTerm] = useState("")
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
 
   // Form states
   const [formData, setFormData] = useState<FormData>({
-    organizerName: '',
-    eventTitle: '',
-    targetAudience: '',
-    startDateTime: '',
-    endDateTime: '',
+    organizerName: "",
+    eventTitle: "",
+    targetAudience: "",
+    startDateTime: "",
+    endDateTime: "",
     isFreeEvent: true,
     autoAttendanceRequired: false,
     needVolunteers: false,
-    sponsorLogos: '',
-    sponsorLogoOrder: '',
+    sponsorLogos: "",
+    sponsorLogoOrder: "",
     certificateSettings: {
       enableCertificate: false,
-      signatories: []
+      signatories: [],
     },
-    eventDocuments: '',
-    approvalStatus: 'Pending',
+    eventDocuments: "",
+    approvalStatus: "Pending",
     displayOnWebsite: false,
-  });
+  })
 
   // Fetch events
-  const { data: events, isLoading, refetch: refetchEvents } = useQuery({
-    queryKey: ['events'],
+  const {
+    data: events,
+    isLoading,
+    refetch: refetchEvents,
+  } = useQuery({
+    queryKey: ["events"],
     queryFn: fetchEvents,
-  });
+  })
 
   // Create event mutation
   const createEventMutation = useMutation<{ success: boolean; event: Event }, Error, CreateEventRequest>({
     mutationFn: createEvent,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['events'] });
-      setIsCreateDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["events"] })
+      setIsCreateDialogOpen(false)
       toast({
-        title: 'Success',
-        description: 'Event created successfully',
-      });
+        title: "Success",
+        description: "Event created successfully",
+      })
       setFormData({
-        organizerName: '',
-        eventTitle: '',
-        targetAudience: '',
-        startDateTime: '',
-        endDateTime: '',
+        organizerName: "",
+        eventTitle: "",
+        targetAudience: "",
+        startDateTime: "",
+        endDateTime: "",
         isFreeEvent: true,
         autoAttendanceRequired: false,
         needVolunteers: false,
-        sponsorLogos: '',
-        sponsorLogoOrder: '',
+        sponsorLogos: "",
+        sponsorLogoOrder: "",
         certificateSettings: {
           enableCertificate: false,
-          signatories: []
+          signatories: [],
         },
-        eventDocuments: '',
-        approvalStatus: 'Pending',
+        eventDocuments: "",
+        approvalStatus: "Pending",
         displayOnWebsite: false,
-      });
+      })
     },
     onError: (error: Error) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: error.message,
-        variant: 'destructive',
-      });
+        variant: "destructive",
+      })
     },
-  });
+  })
+
+  // Reset form when dialog closes
+  const handleCreateDialogClose = (open: boolean) => {
+    if (!open) {
+      setFormData({
+        organizerName: "",
+        eventTitle: "",
+        targetAudience: "",
+        startDateTime: "",
+        endDateTime: "",
+        isFreeEvent: true,
+        autoAttendanceRequired: false,
+        needVolunteers: false,
+        sponsorLogos: "",
+        sponsorLogoOrder: "",
+        certificateSettings: {
+          enableCertificate: false,
+          signatories: [],
+        },
+        eventDocuments: "",
+        approvalStatus: "Pending",
+        displayOnWebsite: false,
+      })
+    }
+    setIsCreateDialogOpen(open)
+  }
 
   // Update event mutation
-  const updateEventMutation = useMutation<{ success: boolean; event: Event }, Error, { id: string; data: UpdateEventRequest }>({
+  const updateEventMutation = useMutation<
+    { success: boolean; event: Event },
+    Error,
+    { id: string; data: UpdateEventRequest }
+  >({
     mutationFn: ({ id, data }) => updateEvent(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['events'] });
-      setIsEditDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["events"] })
+      setIsEditDialogOpen(false)
       toast({
-        title: 'Success',
-        description: 'Event updated successfully',
-      });
+        title: "Success",
+        description: "Event updated successfully",
+      })
     },
     onError: (error: Error) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: error.message,
-        variant: 'destructive',
-      });
+        variant: "destructive",
+      })
     },
-  });
+  })
 
   // Delete event mutation
   const deleteEventMutation = useMutation<{ success: boolean }, Error, string>({
     mutationFn: deleteEvent,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['events'] });
+      queryClient.invalidateQueries({ queryKey: ["events"] })
       toast({
-        title: 'Success',
-        description: 'Event deleted successfully',
-      });
+        title: "Success",
+        description: "Event deleted successfully",
+      })
     },
     onError: (error: Error) => {
       toast({
-        title: 'Error',
+        title: "Error",
         description: error.message,
-        variant: 'destructive',
-      });
+        variant: "destructive",
+      })
     },
-  });
+  })
 
   // Filter events based on search term
-  const filteredEvents = events?.events?.filter((event) =>
-    event.eventTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.organizerName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEvents = events?.events?.filter(
+    (event) =>
+      event.eventTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.organizerName.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     const submitData: CreateEventRequest = {
       ...formData,
-      targetAudience: formData.targetAudience.split(',').map(item => item.trim()).filter(Boolean),
-      sponsorLogos: formData.sponsorLogos.split(',').map(item => item.trim()).filter(Boolean),
-      sponsorLogoOrder: formData.sponsorLogoOrder.split(',').map(item => item.trim()).filter(Boolean),
-      eventDocuments: formData.eventDocuments.split(',').map(item => item.trim()).filter(Boolean),
+      targetAudience: formData.targetAudience
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+      sponsorLogos: formData.sponsorLogos
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+      sponsorLogoOrder: formData.sponsorLogoOrder
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+      eventDocuments: formData.eventDocuments
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
       approvalStatus: formData.approvalStatus as ApprovalStatus,
-    };
+    }
 
     if (selectedEvent) {
       updateEventMutation.mutate({
         id: selectedEvent._id,
-        data: submitData
-      });
+        data: submitData,
+      })
     } else {
-      createEventMutation.mutate(submitData);
+      createEventMutation.mutate(submitData)
     }
-  };
+  }
 
   // Handle edit
   const handleEdit = (event: Event) => {
-    setSelectedEvent(event);
+    setSelectedEvent(event)
     setFormData({
       organizerName: event.organizerName,
       eventTitle: event.eventTitle,
-      targetAudience: event.targetAudience.join(', '),
+      targetAudience: event.targetAudience.join(", "),
       startDateTime: event.startDateTime,
-      endDateTime: event.endDateTime || '',
+      endDateTime: event.endDateTime || "",
       isFreeEvent: event.isFreeEvent,
       autoAttendanceRequired: event.autoAttendanceRequired,
       needVolunteers: event.needVolunteers,
-      sponsorLogos: event.sponsorLogos.join(', '),
-      sponsorLogoOrder: event.sponsorLogoOrder.join(', '),
+      sponsorLogos: event.sponsorLogos.join(", "),
+      sponsorLogoOrder: event.sponsorLogoOrder.join(", "),
       certificateSettings: {
         enableCertificate: event.certificateSettings.enableCertificate,
-        signatories: event.certificateSettings.signatories
+        signatories: event.certificateSettings.signatories,
       },
-      eventDocuments: event.eventDocuments.join(', '),
+      eventDocuments: event.eventDocuments.join(", "),
       approvalStatus: event.approvalStatus,
       displayOnWebsite: event.displayOnWebsite,
-    });
-    setIsEditDialogOpen(true);
-  };
+    })
+    setIsEditDialogOpen(true)
+  }
 
   // Handle delete
   const handleDelete = (eventId: string) => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
-      deleteEventMutation.mutate(eventId);
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      deleteEventMutation.mutate(eventId)
     }
-  };
+  }
 
   // Handle update event
   const handleUpdateEvent = (eventId: string, data: Partial<UpdateEventRequest>) => {
     updateEventMutation.mutate({
       id: eventId,
-      data
-    });
-  };
+      data,
+    })
+  }
 
   if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
-    );
+    )
   }
 
   return (
@@ -240,12 +286,8 @@ export default function AdminEvents() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="max-w-sm"
           />
-          <Button onClick={() => refetchEvents()}>
-            Refresh
-          </Button>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
-            Create Event
-          </Button>
+          <Button onClick={() => refetchEvents()}>Refresh</Button>
+          <Button onClick={() => setIsCreateDialogOpen(true)}>Create Event</Button>
         </div>
       </div>
 
@@ -265,7 +307,7 @@ export default function AdminEvents() {
               <TableRow key={event._id}>
                 <TableCell>{event.eventTitle}</TableCell>
                 <TableCell>{event.organizerName}</TableCell>
-                <TableCell>{format(new Date(event.startDateTime), 'MMM d, yyyy')}</TableCell>
+                <TableCell>{format(new Date(event.startDateTime), "MMM d, yyyy")}</TableCell>
                 <TableCell>
                   <Select
                     value={event.approvalStatus}
@@ -282,17 +324,10 @@ export default function AdminEvents() {
                   </Select>
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleEdit(event)}
-                  >
+                  <Button variant="ghost" onClick={() => handleEdit(event)}>
                     Edit
                   </Button>
-                  <Button
-                    variant="ghost"
-                    className="text-red-500"
-                    onClick={() => handleDelete(event._id)}
-                  >
+                  <Button variant="ghost" className="text-red-500" onClick={() => handleDelete(event._id)}>
                     Delete
                   </Button>
                 </TableCell>
@@ -303,13 +338,11 @@ export default function AdminEvents() {
       </div>
 
       {/* Create Event Dialog */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+      <Dialog open={isCreateDialogOpen} onOpenChange={handleCreateDialogClose}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create Event</DialogTitle>
-            <DialogDescription>
-              Fill in the details to create a new event.
-            </DialogDescription>
+            <DialogDescription>Fill in the details to create a new event.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
@@ -386,7 +419,7 @@ export default function AdminEvents() {
                 <Checkbox
                   id="isFreeEvent"
                   checked={formData.isFreeEvent}
-                  onCheckedChange={(checked) => setFormData({ ...formData, isFreeEvent: checked as boolean })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, isFreeEvent: checked === true })}
                 />
                 <Label htmlFor="isFreeEvent">Free Event</Label>
               </div>
@@ -394,7 +427,7 @@ export default function AdminEvents() {
                 <Checkbox
                   id="autoAttendanceRequired"
                   checked={formData.autoAttendanceRequired}
-                  onCheckedChange={(checked) => setFormData({ ...formData, autoAttendanceRequired: checked as boolean })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, autoAttendanceRequired: checked === true })}
                 />
                 <Label htmlFor="autoAttendanceRequired">Auto Attendance Required</Label>
               </div>
@@ -402,7 +435,7 @@ export default function AdminEvents() {
                 <Checkbox
                   id="needVolunteers"
                   checked={formData.needVolunteers}
-                  onCheckedChange={(checked) => setFormData({ ...formData, needVolunteers: checked as boolean })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, needVolunteers: checked === true })}
                 />
                 <Label htmlFor="needVolunteers">Need Volunteers</Label>
               </div>
@@ -410,7 +443,7 @@ export default function AdminEvents() {
                 <Checkbox
                   id="displayOnWebsite"
                   checked={formData.displayOnWebsite}
-                  onCheckedChange={(checked) => setFormData({ ...formData, displayOnWebsite: checked as boolean })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, displayOnWebsite: checked === true })}
                 />
                 <Label htmlFor="displayOnWebsite">Display on Website</Label>
               </div>
@@ -420,7 +453,7 @@ export default function AdminEvents() {
                   value={formData.approvalStatus}
                   onValueChange={(value) => setFormData({ ...formData, approvalStatus: value as ApprovalStatus })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="approvalStatus">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -434,21 +467,21 @@ export default function AdminEvents() {
                 <Checkbox
                   id="enableCertificate"
                   checked={formData.certificateSettings.enableCertificate}
-                  onCheckedChange={(checked) => setFormData({
-                    ...formData,
-                    certificateSettings: {
-                      ...formData.certificateSettings,
-                      enableCertificate: checked as boolean
-                    }
-                  })}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      certificateSettings: {
+                        ...formData.certificateSettings,
+                        enableCertificate: checked === true,
+                      },
+                    })
+                  }
                 />
                 <Label htmlFor="enableCertificate">Enable Certificate</Label>
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background pt-4">
-              <Button type="submit">
-                {selectedEvent ? 'Update' : 'Create'} Event
-              </Button>
+              <Button type="submit">{selectedEvent ? "Update" : "Create"} Event</Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -459,9 +492,7 @@ export default function AdminEvents() {
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Event</DialogTitle>
-            <DialogDescription>
-              Update the event details.
-            </DialogDescription>
+            <DialogDescription>Update the event details.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
@@ -538,7 +569,7 @@ export default function AdminEvents() {
                 <Checkbox
                   id="isFreeEvent"
                   checked={formData.isFreeEvent}
-                  onCheckedChange={(checked) => setFormData({ ...formData, isFreeEvent: checked as boolean })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, isFreeEvent: checked === true })}
                 />
                 <Label htmlFor="isFreeEvent">Free Event</Label>
               </div>
@@ -546,7 +577,7 @@ export default function AdminEvents() {
                 <Checkbox
                   id="autoAttendanceRequired"
                   checked={formData.autoAttendanceRequired}
-                  onCheckedChange={(checked) => setFormData({ ...formData, autoAttendanceRequired: checked as boolean })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, autoAttendanceRequired: checked === true })}
                 />
                 <Label htmlFor="autoAttendanceRequired">Auto Attendance Required</Label>
               </div>
@@ -554,7 +585,7 @@ export default function AdminEvents() {
                 <Checkbox
                   id="needVolunteers"
                   checked={formData.needVolunteers}
-                  onCheckedChange={(checked) => setFormData({ ...formData, needVolunteers: checked as boolean })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, needVolunteers: checked === true })}
                 />
                 <Label htmlFor="needVolunteers">Need Volunteers</Label>
               </div>
@@ -562,7 +593,7 @@ export default function AdminEvents() {
                 <Checkbox
                   id="displayOnWebsite"
                   checked={formData.displayOnWebsite}
-                  onCheckedChange={(checked) => setFormData({ ...formData, displayOnWebsite: checked as boolean })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, displayOnWebsite: checked === true })}
                 />
                 <Label htmlFor="displayOnWebsite">Display on Website</Label>
               </div>
@@ -572,7 +603,7 @@ export default function AdminEvents() {
                   value={formData.approvalStatus}
                   onValueChange={(value) => setFormData({ ...formData, approvalStatus: value as ApprovalStatus })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="approvalStatus">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -586,25 +617,25 @@ export default function AdminEvents() {
                 <Checkbox
                   id="enableCertificate"
                   checked={formData.certificateSettings.enableCertificate}
-                  onCheckedChange={(checked) => setFormData({
-                    ...formData,
-                    certificateSettings: {
-                      ...formData.certificateSettings,
-                      enableCertificate: checked as boolean
-                    }
-                  })}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      certificateSettings: {
+                        ...formData.certificateSettings,
+                        enableCertificate: checked === true,
+                      },
+                    })
+                  }
                 />
                 <Label htmlFor="enableCertificate">Enable Certificate</Label>
               </div>
             </div>
             <DialogFooter className="sticky bottom-0 bg-background pt-4">
-              <Button type="submit">
-                Update Event
-              </Button>
+              <Button type="submit">Update Event</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }
