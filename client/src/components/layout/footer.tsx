@@ -122,7 +122,7 @@ const Footer: React.FC = () => {
                 />
                 <button 
                   type="submit" 
-                  className="bg-primary hover:bg-[#E94E77]/90 text-white px-4 py-2 rounded-r-md transition-colors"
+                  className="bg-primary hover:bg-[#F14B05]/90 text-white px-4 py-2 rounded-r-md transition-colors"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (

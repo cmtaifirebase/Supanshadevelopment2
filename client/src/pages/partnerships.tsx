@@ -22,7 +22,7 @@ const Partnerships: React.FC = () => {
                   <li>Skill-based volunteering</li>
                   <li>Cause-related marketing</li>
                 </ul>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Explore Corporate Partnerships
                 </button>
               </div>
@@ -36,7 +36,7 @@ const Partnerships: React.FC = () => {
                   <li>Research collaboration</li>
                   <li>Resource pooling</li>
                 </ul>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Partner With Us
                 </button>
               </div>
@@ -50,7 +50,7 @@ const Partnerships: React.FC = () => {
                   <li>Technical assistance</li>
                   <li>Capacity building</li>
                 </ul>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Connect With Us
                 </button>
               </div>
@@ -63,7 +63,7 @@ const Partnerships: React.FC = () => {
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <h3 className="text-xl font-medium mb-2">Rural Digital Literacy Initiative</h3>
                 <p className="mb-4">Seeking technology partners to help bridge the digital divide in rural communities through education and infrastructure.</p>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Learn More
                 </button>
               </div>
@@ -71,7 +71,7 @@ const Partnerships: React.FC = () => {
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <h3 className="text-xl font-medium mb-2">Community Health Outreach</h3>
                 <p className="mb-4">Looking for healthcare organizations to collaborate on preventative health education and services in underserved areas.</p>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Learn More
                 </button>
               </div>
@@ -79,7 +79,7 @@ const Partnerships: React.FC = () => {
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <h3 className="text-xl font-medium mb-2">Sustainable Livelihood Program</h3>
                 <p className="mb-4">Seeking partners with expertise in sustainable agriculture and market access to support rural entrepreneurship.</p>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Learn More
                 </button>
               </div>

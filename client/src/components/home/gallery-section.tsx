@@ -84,7 +84,7 @@ const GallerySection: React.FC = () => {
         <div className="text-center mt-10">
           <Link 
             href="/gallery" 
-            className="inline-block bg-primary hover:bg-[#E94E77]/90 text-white px-6 py-3 rounded-md font-medium transition-colors"
+            className="inline-block bg-primary hover:bg-[#F14B05]/90 text-white px-6 py-3 rounded-md font-medium transition-colors"
           >
             View All Gallery
           </Link>

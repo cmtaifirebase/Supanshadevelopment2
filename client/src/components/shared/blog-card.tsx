@@ -29,7 +29,8 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
   const formattedDate = dateToFormat ? format(new Date(dateToFormat), 'MMMM d, yyyy') : '';
 
   // Create excerpt from content
-  const excerpt = content.length > 150 ? `${content.substring(0, 150)}...` : content;
+  const words = content.split(' ');
+  const excerpt = words.length > 25 ? `${words.slice(0, 25).join(' ')}...` : content;
 
   return (
     <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">

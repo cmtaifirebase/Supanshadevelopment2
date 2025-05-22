@@ -304,7 +304,7 @@ const Causes: React.FC = () => {
               Your contribution, no matter the size, helps us create lasting change in communities that need it most.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <a href="/donate" className="bg-primary hover:bg-[#E94E77]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
+              <a href="/donate" className="bg-primary hover:bg-[#F14B05]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
                 Donate Now
               </a>
               <a href="/volunteer" className="bg-secondary hover:bg-secondary/90 text-white px-8 py-3 rounded-md font-medium transition-colors">

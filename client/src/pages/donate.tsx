@@ -189,41 +189,41 @@ const Donate: React.FC = () => {
             </div>
 
             <div>
-              <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-                <h3 className="text-xl font-montserrat font-semibold mb-4">Why Donate to Supansha?</h3>
-                <ul className="space-y-4">
-                  <li className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-gray-700">100% of your donation goes to your chosen cause</span>
-                  </li>
-                  <li className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-gray-700">Tax benefits under 80G of Income Tax Act</span>
-                  </li>
-                  <li className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-gray-700">Regular updates on how your donation is making impact</span>
-                  </li>
-                  <li className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-gray-700">Transparent reporting and utilization</span>
-                  </li>
-                  <li className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-gray-700">Support ISO 9001:2015 certified organization</span>
-                  </li>
-                </ul>
-              </div>
+           <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+  <h3 className="text-xl font-montserrat font-semibold mb-4">Why Donate to Supansha?</h3>
+  <ul className="space-y-4">
+    <li className="flex">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <span className="text-gray-700">10% of the donation goes towards platform and administrative charges</span>
+    </li>
+    <li className="flex">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <span className="text-gray-700">Donations are eligible for tax exemption under <strong>Section 12A</strong> and <strong>Section 80G</strong> of the Income Tax Act.</span>
+    </li>
+    <li className="flex">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <span className="text-gray-700">Regular updates on how your donation is making impact</span>
+    </li>
+    <li className="flex">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <span className="text-gray-700">Transparent reporting and utilization</span>
+    </li>
+    <li className="flex">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <span className="text-gray-700">Support ISO 9001:2015 certified organization</span>
+    </li>
+  </ul>
+</div>
 
               <div className="bg-gray-900 text-white rounded-lg shadow-lg p-8">
                 <h3 className="text-xl font-montserrat font-semibold mb-4">Other Ways to Support</h3>

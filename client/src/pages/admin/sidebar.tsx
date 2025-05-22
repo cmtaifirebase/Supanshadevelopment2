@@ -119,27 +119,32 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-30 h-screen transition-all duration-300 ease-in-out bg-black text-white ${sidebarWidth} ${
+        className={`fixed top-0 left-0 z-30 h-screen transition-all duration-300 ease-in-out bg-white shadow-lg ${sidebarWidth} ${
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
         {/* Header */}
-        <div className={`flex items-center p-4 border-b border-secondary ${
+        <div className={`flex items-center p-4 border-b border-gray-200 ${
           isCollapsed ? "justify-center" : "justify-between"
         }`}>
-          {shouldShowFull && <h2 className="text-xl font-bold">Admin Panel</h2>}
+          {shouldShowFull && (
+            <div className="flex items-center space-x-2">
+              <img src="/logo.png" alt="Logo" className="w-8 h-8" />
+              <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
+            </div>
+          )}
         </div>
 
         <nav className="p-4 overflow-y-auto h-[calc(100vh-60px)]">
           {/* Home Link */}
           <Link
             href="/"
-            className={`flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 mb-4 transition-colors ${
+            className={`flex items-center px-4 py-3 rounded-lg hover:bg-primary/5 mb-4 transition-all duration-200 ${
               isCollapsed ? "justify-center" : "space-x-3"
-            }`}
+            } group`}
           >
-            <FaHome className="text-primary" />
-            {shouldShowFull && <span className="font-medium">Public Site</span>}
+            <FaHome className="text-primary group-hover:scale-110 transition-transform" />
+            {shouldShowFull && <span className="font-medium text-gray-700 group-hover:text-primary">Public Site</span>}
           </Link>
 
           <ul className="space-y-2">
@@ -149,24 +154,24 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <div>
                     <button
                       onClick={() => toggleSubmenu(item.label)}
-                      className={`flex items-center w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors ${
+                      className={`flex items-center w-full px-4 py-3 rounded-lg hover:bg-primary/5 transition-all duration-200 ${
                         shouldShowFull ? "justify-between" : "justify-center"
                       } ${
                         expandedMenus.includes(item.label) || 
                         item.children.some(child => isActive(child.href))
-                          ? "bg-gray-800"
-                          : ""
-                      }`}
+                          ? "bg-primary/10 text-primary"
+                          : "text-gray-700"
+                      } group`}
                     >
                       <span className={`flex items-center ${
                         shouldShowFull ? "space-x-3" : ""
                       }`}>
-                        <span className="text-primary">{item.icon}</span>
+                        <span className="text-primary group-hover:scale-110 transition-transform">{item.icon}</span>
                         {shouldShowFull && <span>{item.label}</span>}
                       </span>
                       {shouldShowFull && (
                         <FaChevronDown
-                          className={`transition-transform text-secondary ${
+                          className={`transition-transform text-gray-400 ${
                             expandedMenus.includes(item.label) ? "rotate-180" : ""
                           }`}
                         />
@@ -178,8 +183,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                           <li key={child.href}>
                             <Link
                               href={child.href}
-                              className={`block px-4 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors ${
-                                isActive(child.href) ? "bg-secondary" : ""
+                              className={`block px-4 py-2 text-sm rounded-lg hover:bg-primary/5 transition-all duration-200 ${
+                                isActive(child.href) 
+                                  ? "bg-primary/10 text-primary font-medium" 
+                                  : "text-gray-600 hover:text-primary"
                               }`}
                             >
                               {child.label}
@@ -192,13 +199,15 @@ const Sidebar: React.FC<SidebarProps> = ({
                 ) : (
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors ${
+                    className={`flex items-center px-4 py-3 rounded-lg hover:bg-primary/5 transition-all duration-200 ${
                       shouldShowFull ? "space-x-3" : "justify-center"
                     } ${
-                      isActive(item.href) ? "bg-secondary" : ""
-                    }`}
+                      isActive(item.href) 
+                        ? "bg-primary/10 text-primary font-medium" 
+                        : "text-gray-700 hover:text-primary"
+                    } group`}
                   >
-                    <span className="text-primary">{item.icon}</span>
+                    <span className="text-primary group-hover:scale-110 transition-transform">{item.icon}</span>
                     {shouldShowFull && <span>{item.label}</span>}
                   </Link>
                 )}
@@ -206,7 +215,23 @@ const Sidebar: React.FC<SidebarProps> = ({
             ))}
           </ul>
         </nav>
+
+        {/* Collapse Toggle Button */}
+        <button
+          onClick={() => onCollapse(!isCollapsed)}
+          className="absolute bottom-4 right-4 p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+        >
+          <FaChevronDown className={`transform transition-transform ${isCollapsed ? "rotate-180" : ""}`} />
+        </button>
       </aside>
+
+      {/* Mobile Overlay */}
+      {isMobile && isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-20 md:hidden"
+          onClick={() => onToggle(false)}
+        />
+      )}
     </>
   );
 };

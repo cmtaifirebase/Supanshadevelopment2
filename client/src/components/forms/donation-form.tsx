@@ -15,8 +15,7 @@ const donationSchema = z.object({
     .min(100, { message: 'Minimum donation amount is ₹100' })
     .max(100000, { message: 'Maximum donation amount is ₹100,000' }),
   message: z.string().optional().default(''),
-  aadharNumber: z.string().optional().nullable(),
-  panCardNumber: z.string().optional().nullable(),
+  identityProof: z.instanceof(File).optional(),
   acceptTerms: z.boolean().refine(val => val === true, {
     message: 'You must accept the terms and conditions',
   }),
@@ -33,6 +32,7 @@ interface DonationFormProps {
 const DonationForm: React.FC<DonationFormProps> = ({ causeSlug, customCause, lockedCause }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   const {
@@ -49,11 +49,18 @@ const DonationForm: React.FC<DonationFormProps> = ({ causeSlug, customCause, loc
       phone: '',
       amount: 1000,
       message: '',
-      aadharNumber: null,
-      panCardNumber: null,
+      identityProof: undefined,
       acceptTerms: false,
     },
   });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setValue('identityProof', file);
+    }
+  };
 
   const onSubmit = async (data: DonationFormValues) => {
     setIsSubmitting(true);
@@ -77,22 +84,24 @@ const DonationForm: React.FC<DonationFormProps> = ({ causeSlug, customCause, loc
             customCauseToSend = 'General';
           }
 
-          const donationData = {
-            ...data,
-            causeSlug: causeSlugToSend,
-            customCause: customCauseToSend,
-            paymentId: 'pay_' + Math.random().toString(36).substring(2, 15),
-            status: 'completed' as const,
-            message: data.message || '',
-            aadharNumber: data.aadharNumber || null,
-            panCardNumber: data.panCardNumber || null,
-          };
+          const formData = new FormData();
+          formData.append('name', data.name);
+          formData.append('email', data.email);
+          formData.append('phone', data.phone);
+          formData.append('amount', data.amount.toString());
+          formData.append('message', data.message || '');
+          formData.append('causeSlug', causeSlugToSend || '');
+          formData.append('customCause', customCauseToSend || '');
+          formData.append('paymentId', 'pay_' + Math.random().toString(36).substring(2, 15));
+          formData.append('status', 'completed');
+          if (data.identityProof) {
+            formData.append('identityProof', data.identityProof);
+          }
 
           const response = await fetch(`${API_BASE_URL}/api/donation`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify(donationData),
+            body: formData,
           });
 
           if (!response.ok) {
@@ -111,6 +120,7 @@ const DonationForm: React.FC<DonationFormProps> = ({ causeSlug, customCause, loc
 
           queryClient.invalidateQueries({ queryKey: ['causes'] });
           reset();
+          setSelectedFile(null);
 
           if (result.donation?.receipt) {
             setTimeout(async () => {
@@ -251,49 +261,45 @@ const DonationForm: React.FC<DonationFormProps> = ({ causeSlug, customCause, loc
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="aadharNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              Aadhar Number (Optional)
-            </label>
+        <div>
+          <label htmlFor="identityProof" className="block text-sm font-medium text-gray-700 mb-1">
+            Identity Proof (Optional)
+          </label>
+          <div className="mt-1 flex items-center">
             <input
-              id="aadharNumber"
-              type="text"
-              className={`w-full p-3 border ${errors.aadharNumber ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-primary focus:border-primary`}
-              placeholder="12-digit Aadhar number"
-              {...register('aadharNumber')}
+              type="file"
+              id="identityProof"
+              accept="image/*,.pdf"
+              className="hidden"
+              onChange={handleFileChange}
             />
-            {errors.aadharNumber && (
-              <p className="mt-1 text-sm text-red-600">{errors.aadharNumber.message}</p>
+            <label
+              htmlFor="identityProof"
+              className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              {selectedFile ? 'Change File' : 'Upload File'}
+            </label>
+            {selectedFile && (
+              <span className="ml-3 text-sm text-gray-500">
+                {selectedFile.name}
+              </span>
             )}
           </div>
-          
-          <div>
-            <label htmlFor="panCardNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              PAN Number (Optional)
-            </label>
-            <input
-              id="panCardNumber"
-              type="text"
-              className={`w-full p-3 border ${errors.panCardNumber ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-primary focus:border-primary`}
-              placeholder="10-character PAN"
-              {...register('panCardNumber')}
-            />
-            {errors.panCardNumber && (
-              <p className="mt-1 text-sm text-red-600">{errors.panCardNumber.message}</p>
-            )}
-          </div>
+          <p className="mt-1 text-sm text-gray-500">
+            Upload Aadhar Card, PAN Card, Driving License, or Passport (PDF or Image)
+          </p>
+          {errors.identityProof && (
+            <p className="mt-1 text-sm text-red-600">{errors.identityProof.message}</p>
+          )}
         </div>
 
-        <div className="flex items-start mt-4">
-          <div className="flex items-center h-5">
-            <input
-              id="acceptTerms"
-              type="checkbox"
-              className={`h-4 w-4 border ${errors.acceptTerms ? 'border-red-500' : 'border-gray-300'} rounded focus:ring-primary text-primary`}
-              {...register('acceptTerms')}
-            />
-          </div>
+        <div className="flex items-center h-5">
+          <input
+            id="acceptTerms"
+            type="checkbox"
+            className={`h-4 w-4 border ${errors.acceptTerms ? 'border-red-500' : 'border-gray-300'} rounded focus:ring-primary text-primary`}
+            {...register('acceptTerms')}
+          />
           <div className="ml-3 text-sm">
             <label htmlFor="acceptTerms" className="text-gray-700">
               I agree to the{' '}
@@ -316,7 +322,7 @@ const DonationForm: React.FC<DonationFormProps> = ({ causeSlug, customCause, loc
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
+          className="w-full bg-primary hover:bg-[#F14B05]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
         >
           {isSubmitting ? (
             <>

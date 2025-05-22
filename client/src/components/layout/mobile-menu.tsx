@@ -180,7 +180,7 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen }) => {
         
         <div className="pt-4 flex flex-col space-y-3">
           <Link href="/donate" className="bg-[#F14B05] hover:bg-[#F14B05]/90 text-white text-center px-4 py-2 rounded-md text-sm font-medium transition-colors">Donate Now</Link>
-          <Link href="/volunteer" className="bg-[#E94E77] hover:bg-[#E94E77]/90 text-white text-center px-4 py-2 rounded-md text-sm font-medium transition-colors">Join Us</Link>
+          <Link href="/volunteer" className="bg-[#F14B05] hover:bg-[#F14B05]/90 text-white text-center px-4 py-2 rounded-md text-sm font-medium transition-colors">Join Us</Link>
         </div>
       </nav>
     </div>

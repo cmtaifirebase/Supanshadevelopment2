@@ -20,7 +20,7 @@ const AboutMini: React.FC = () => {
             </p>
             <Link 
               href="/about" 
-              className="inline-block bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-3 rounded-md font-medium transition-colors"
+              className="inline-block bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-3 rounded-md font-medium transition-colors"
             >
               Read More
             </Link>

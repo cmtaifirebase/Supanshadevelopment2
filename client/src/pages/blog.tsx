@@ -149,7 +149,7 @@ const Blog: React.FC = () => {
                 />
                 <button 
                   type="submit" 
-                  className="bg-primary hover:bg-[#E94E77]/90 text-white px-6 py-3 rounded-r-md transition-colors"
+                  className="bg-primary hover:bg-[#F14B05]/90 text-white px-6 py-3 rounded-r-md transition-colors"
                 >
                   Subscribe
                 </button>
@@ -168,7 +168,7 @@ const Blog: React.FC = () => {
             Your support can help transform lives.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="/donate" className="bg-primary hover:bg-[#E94E77]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
+            <a href="/donate" className="bg-primary hover:bg-[#F14B05]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
               Donate Now
             </a>
             <a href="/volunteer" className="bg-secondary hover:bg-secondary/90 text-white px-8 py-3 rounded-md font-medium transition-colors">

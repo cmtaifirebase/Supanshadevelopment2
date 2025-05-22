@@ -96,12 +96,12 @@ const Shop: React.FC = () => {
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300"></div>
                 </div>
                 <div className="p-6">
-                  <span className="text-sm font-medium text-[#E94E77] mb-2 block">{product.category}</span>
+                  <span className="text-sm font-medium text-[#F14B05] mb-2 block">{product.category}</span>
                   <h3 className="text-xl font-montserrat font-bold mb-2">{product.name}</h3>
                   <p className="text-gray-600 mb-4">{product.description}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-gray-900">₹{product.price}</span>
-                    <button className="bg-[#E94E77] hover:bg-[#E94E77]/90 text-white px-6 py-2 rounded-md font-medium transition-colors">
+                    <button className="bg-[#F14B05] hover:bg-[#F14B05]/90 text-white px-6 py-2 rounded-md font-medium transition-colors">
                       Add to Cart
                     </button>
                   </div>
@@ -123,15 +123,15 @@ const Shop: React.FC = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <div className="text-4xl font-bold text-[#E94E77] mb-2">100+</div>
+              <div className="text-4xl font-bold text-[#F14B05] mb-2">100+</div>
               <div className="text-gray-700">Artisans Supported</div>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <div className="text-4xl font-bold text-[#E94E77] mb-2">15+</div>
+              <div className="text-4xl font-bold text-[#F14B05] mb-2">15+</div>
               <div className="text-gray-700">Villages Impacted</div>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-md text-center">
-              <div className="text-4xl font-bold text-[#E94E77] mb-2">₹2L+</div>
+              <div className="text-4xl font-bold text-[#F14B05] mb-2">₹2L+</div>
               <div className="text-gray-700">Income Generated</div>
             </div>
           </div>
@@ -139,7 +139,7 @@ const Shop: React.FC = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="py-16 bg-[#E94E77] text-white">
+      <div className="py-16 bg-[#F14B05] text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-montserrat font-bold mb-4">Join Our Movement</h2>
           <p className="max-w-2xl mx-auto mb-8">
@@ -149,7 +149,7 @@ const Shop: React.FC = () => {
           <div className="flex flex-wrap justify-center gap-4">
             <Link 
               href="/volunteer" 
-              className="bg-white hover:bg-gray-100 text-[#E94E77] px-8 py-3 rounded-md font-medium transition-colors"
+              className="bg-white hover:bg-gray-100 text-[#F14B05] px-8 py-3 rounded-md font-medium transition-colors"
             >
               Become a Volunteer
             </Link>

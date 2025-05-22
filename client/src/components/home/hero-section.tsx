@@ -22,7 +22,7 @@ const HeroSection: React.FC = () => {
             <Link href="/about" className="bg-[#F14B05] hover:bg-[#F14B05]/90 text-white px-6 py-3 rounded-md font-medium transition-colors">
               Read More
             </Link>
-            <Link href="/donate" className="bg-[#E94E77] hover:bg-[#E94E77]/90 text-white px-6 py-3 rounded-md font-medium transition-colors">
+            <Link href="/donate" className="bg-[#F14B05] hover:bg-[#F14B05]/90 text-white px-6 py-3 rounded-md font-medium transition-colors">
               Donate Now
             </Link>
             <Link href="/volunteer" className="bg-white hover:bg-gray-100 text-black px-6 py-3 rounded-md font-medium transition-colors">

@@ -237,7 +237,7 @@ const FAQPage: React.FC = () => {
             <div className="mt-6 text-center">
               <a 
                 href="/contact" 
-                className="inline-block bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors"
+                className="inline-block bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors"
               >
                 Contact Us
               </a>

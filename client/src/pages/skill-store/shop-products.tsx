@@ -78,7 +78,7 @@ const ProductCard: React.FC<{ product: any }> = ({ product }) => {
           <span className="inline-block bg-gray-100 px-3 py-1 text-xs text-gray-700 rounded-full">
             {product.category}
           </span>
-          <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-3 py-1 rounded-md text-sm transition-colors">
+          <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-3 py-1 rounded-md text-sm transition-colors">
             Add to Cart
           </button>
         </div>

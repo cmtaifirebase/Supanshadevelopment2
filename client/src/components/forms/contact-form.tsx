@@ -153,7 +153,7 @@ const ContactForm: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-primary hover:bg-[#E94E77]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
+          className="w-full bg-primary hover:bg-[#F14B05]/90 text-white py-3 px-4 rounded-md font-medium transition-colors flex justify-center items-center"
         >
           {isSubmitting ? (
             <>

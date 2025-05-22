@@ -17,7 +17,7 @@ const Careers: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Project Manager - Rural Development</h3>
                 <p className="text-gray-600 mb-3">Full-time · Delhi/Remote · 5+ years experience</p>
                 <p className="mb-4">Lead our rural development initiatives, coordinating with local communities and stakeholders to implement sustainable solutions.</p>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Apply Now
                 </button>
               </div>
@@ -26,7 +26,7 @@ const Careers: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Community Outreach Coordinator</h3>
                 <p className="text-gray-600 mb-3">Full-time · Multiple Locations · 3+ years experience</p>
                 <p className="mb-4">Build relationships with communities, understand their needs, and connect them with our programs and resources.</p>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Apply Now
                 </button>
               </div>
@@ -35,7 +35,7 @@ const Careers: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">Grant Writer</h3>
                 <p className="text-gray-600 mb-3">Part-time · Remote · 2+ years experience</p>
                 <p className="mb-4">Research and develop compelling grant proposals to secure funding for our programs and initiatives.</p>
-                <button className="bg-primary hover:bg-[#E94E77]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
+                <button className="bg-primary hover:bg-[#F14B05]/90 text-white px-5 py-2 rounded-md font-medium transition-colors">
                   Apply Now
                 </button>
               </div>
