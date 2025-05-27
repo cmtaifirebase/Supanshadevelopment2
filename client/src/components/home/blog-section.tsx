@@ -19,10 +19,26 @@ interface BlogPost {
   updatedAt: string;
 }
 
+interface EventsResponse {
+  success: boolean;
+  blogs: BlogPost[]; 
+}
+
 const BlogSection: React.FC = () => {
-  const { data: blogPosts, isLoading } = useQuery<BlogPost[]>({
-    queryKey: [`$(API_BASE_URL)/api/blogs`],
-    select: (data) => data.slice(0, 3), // Take only the first 3 items
+  const { data: eventResponse, isLoading } = useQuery<EventsResponse>({
+    queryKey: ['events'],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/api/blogs`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch events');
+      }
+      return response.json();
+    },
   });
 
   return (
@@ -39,7 +55,7 @@ const BlogSection: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts?.map(post => (
+            {eventResponse?.blogs?.map(post => (
               <BlogCard key={post._id} post={post} />
             ))}
           </div>
