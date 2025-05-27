@@ -17,13 +17,13 @@ const DonateCard: React.FC<DonateCardProps> = ({ cause }) => {
         style={{ backgroundImage: `url(${image})` }}
       ></div>
       <div className="p-6">
-        <h3 className="font-montserrat font-semibold text-xl mb-3">{title}</h3>
+        <h3 className="font-montserrat font-semibold text-white text-xl mb-3">{title}</h3>
         <p className="text-gray-300 text-sm mb-4">{description}</p>
         <div className="mb-5">
           <ProgressBar progress={progress} colorClass="bg-secondary" />
           <div className="flex justify-between text-sm mt-2">
-            <span className="text-gray-400">Raised: ₹{raised.toLocaleString()}</span>
-            <span>Goal: ₹{goal.toLocaleString()}</span>
+            <span className="text-gray-400 text-white">Raised: ₹{raised.toLocaleString()}</span>
+            <span className='text-white'>Goal: ₹{goal.toLocaleString()}</span>
           </div>
         </div>
         <Link 

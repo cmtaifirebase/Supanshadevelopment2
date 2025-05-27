@@ -130,21 +130,21 @@ const About: React.FC = () => {
                       Through this collective, we unite four types of development champions:
                     </p>
                     <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">
-                      <li>
-                        <strong>Development Doers</strong> – Individuals driving social change through grassroots action
-                        and leadership.
+                      <li className="flex items-center">
+                        <i className="fas fa-hands-helping mr-2 text-primary"></i>
+                        <strong>Development Doers</strong> – Individuals driving social change through grassroots action and leadership.
                       </li>
-                      <li>
-                        <strong>Development Dealers</strong> – Businesses delivering practical, innovative, and scalable
-                        solutions.
+                      <li className="flex items-center">
+                        <i className="fas fa-lightbulb mr-2 text-primary"></i>
+                        <strong>Development Dealers</strong> – Businesses delivering practical, innovative, and scalable solutions.
                       </li>
-                      <li>
-                        <strong>Development Drivers</strong> – NGOs and civil society organizations creating real impact
-                        on the ground.
+                      <li className="flex items-center">
+                        <i className="fas fa-people-carry mr-2 text-primary"></i>
+                        <strong>Development Drivers</strong> – NGOs and civil society organizations creating real impact on the ground.
                       </li>
-                      <li>
-                        <strong>Development Donors</strong> – Supporters, CSR funders, and philanthropists empowering
-                        sustainable futures.
+                      <li className="flex items-center">
+                        <i className="fas fa-donate mr-2 text-primary"></i>
+                        <strong>Development Donors</strong> – Supporters, CSR funders, and philanthropists empowering sustainable futures.
                       </li>
                     </ul>
                     <p className="text-gray-700">
@@ -160,27 +160,39 @@ const About: React.FC = () => {
                       At the heart of the SUPANSHA® network lies the integration of three transformative forces that
                       guide our strategy and inspire our people:
                     </p>
+
+
                     <div className="grid md:grid-cols-3 gap-6 mb-8">
                       <div className="bg-light p-6 rounded-lg">
-                        <h4 className="font-montserrat font-semibold text-xl mb-2">इक्षा शक्ति (Iksha-Shakti)</h4>
+                        <h4 className="font-montserrat font-semibold text-xl mb-2 flex items-center">
+                          <i className="fas fa-bullseye fa-2x mr-2 text-primary"></i>
+                          इक्षा शक्ति (Iksha-Shakti)
+                        </h4>
                         <p className="text-gray-700">
                           The Power of Intention: The unwavering will to bring change where it's needed most.
                         </p>
                       </div>
                       <div className="bg-light p-6 rounded-lg">
-                        <h4 className="font-montserrat font-semibold text-xl mb-2">ज्ञान शक्ति (Gyan-Shakti)</h4>
+                        <h4 className="font-montserrat font-semibold text-xl mb-2 flex items-center">
+                          <i className="fas fa-book-open fa-2x mr-2 text-primary"></i>
+                          ज्ञान शक्ति (Gyan-Shakti)
+                        </h4>
                         <p className="text-gray-700">
-                          The Power of Knowledge: Empowering minds through education, research, and informed
-                          decision-making.
+                          The Power of Knowledge: Empowering minds through education, research, and informed decision-making.
                         </p>
                       </div>
                       <div className="bg-light p-6 rounded-lg">
-                        <h4 className="font-montserrat font-semibold text-xl mb-2">क्रिया शक्ति (Kriya-Shakti)</h4>
+                        <h4 className="font-montserrat font-semibold text-xl mb-2 flex items-center">
+                          <i className="fas fa-hands fa-2x mr-2 text-primary"></i>
+                          क्रिया शक्ति (Kriya-Shakti)
+                        </h4>
                         <p className="text-gray-700">
                           The Power of Action: Translating intent and insight into ground-level impact.
                         </p>
                       </div>
                     </div>
+
+
                   </div>
 
                   <div className="mb-12">
@@ -193,41 +205,60 @@ const About: React.FC = () => {
                       connected, our solutions must be holistic—crafted through collaboration, innovation, and
                       compassion.
                     </p>
+
+
                     <div className="grid md:grid-cols-3 gap-6">
                       <div className="bg-primary/5 p-6 rounded-lg">
-                        <h4 className="font-semibold text-lg mb-2">Fostering Positive Change</h4>
+                        <h4 className="font-semibold text-lg mb-2 flex items-center">
+                          <i className="fas fa-seedling fa-2x mr-2 text-primary"></i>
+                          Fostering Positive Change
+                        </h4>
                         <p className="text-gray-700">
                           Inspiring progress and uplifting communities through impactful, people-centered initiatives.
                         </p>
                       </div>
                       <div className="bg-primary/5 p-6 rounded-lg">
-                        <h4 className="font-semibold text-lg mb-2">Supporting Sustainable Development</h4>
+                        <h4 className="font-semibold text-lg mb-2 flex items-center">
+                          <i className="fas fa-leaf fa-2x mr-2 text-primary"></i>
+                          Supporting Sustainable Development
+                        </h4>
                         <p className="text-gray-700">
-                          Designing innovative solutions that create lasting, measurable improvements in lives and
-                          livelihoods.
+                          Designing innovative solutions that create lasting, measurable improvements in lives and livelihoods.
                         </p>
                       </div>
                       <div className="bg-primary/5 p-6 rounded-lg">
-                        <h4 className="font-semibold text-lg mb-2">Encouraging Growth</h4>
+                        <h4 className="font-semibold text-lg mb-2 flex items-center">
+                          <i className="fas fa-chart-line fa-2x mr-2 text-primary"></i>
+                          Encouraging Growth
+                        </h4>
                         <p className="text-gray-700">
                           Empowering individuals, organizations, and ecosystems to realize their full potential.
                         </p>
                       </div>
                     </div>
+
+
                   </div>
+
 
                   <div className="mb-12">
                     <h3 className="text-2xl font-montserrat font-semibold mb-4">Mission & Vision</h3>
                     <div className="grid md:grid-cols-2 gap-8 mb-8">
                       <div className="bg-secondary/5 p-6 rounded-lg">
-                        <h4 className="font-montserrat font-semibold text-xl mb-3 text-primary">Our Vision</h4>
+                        <h4 className="font-montserrat font-semibold text-xl mb-3 text-primary flex items-center">
+                          <i className="fas fa-eye fa-lg mr-2"></i>
+                          Our Vision
+                        </h4>
                         <p className="text-gray-700">
                           To build empowered communities that are resilient, self-sufficient, and capable of
                           transforming their own futures through access, equity, and opportunity.
                         </p>
                       </div>
                       <div className="bg-primary/5 p-6 rounded-lg">
-                        <h4 className="font-montserrat font-semibold text-xl mb-3 text-primary">Our Mission</h4>
+                        <h4 className="font-montserrat font-semibold text-xl mb-3 text-primary flex items-center">
+                          <i className="fas fa-bullseye fa-lg mr-2"></i>
+                          Our Mission
+                        </h4>
                         <p className="text-gray-700">
                           To create a world where every individual can live with dignity, reach their full potential,
                           and contribute to a sustainable, inclusive future.
@@ -235,6 +266,7 @@ const About: React.FC = () => {
                       </div>
                     </div>
                   </div>
+
 
                   <div className="mb-12">
                     <h3 className="text-2xl font-montserrat font-semibold mb-4">Our CREATE Values</h3>

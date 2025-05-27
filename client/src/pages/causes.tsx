@@ -20,6 +20,11 @@ interface Project {
 
 const Causes: React.FC = () => {
   const [activeTab, setActiveTab] = useState('all');
+  const [openFAQ, setOpenFAQ] = useState<string | null>(null); // State to manage open FAQ
+
+  const toggleFAQ = (faq: string) => {
+    setOpenFAQ(openFAQ === faq ? null : faq);
+  };
 
   const { data: causes, isLoading: causesLoading } = useQuery<{ success: boolean; causes: Cause[] }>({
     queryKey: ['causes'],
@@ -102,34 +107,44 @@ const Causes: React.FC = () => {
                       All Causes
                     </button>
                     <button 
-                      onClick={() => setActiveTab('health')}
+                      onClick={() => setActiveTab('Healthcare and Well being')}
                       className={`py-2 px-4 text-sm font-medium ${
-                        activeTab === 'health' 
+                        activeTab === 'Healthcare and Well being' 
                           ? 'bg-primary text-white' 
                           : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100'
                       }`}
                     >
-                      Health
+                      Healthcare and Well being
                     </button>
                     <button 
-                      onClick={() => setActiveTab('education')}
+                      onClick={() => setActiveTab('Education and Livelihood')}
                       className={`py-2 px-4 text-sm font-medium ${
-                        activeTab === 'education' 
+                        activeTab === 'Education and Livelihood' 
                           ? 'bg-primary text-white' 
                           : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100'
                       }`}
                     >
-                      Education
+                      Education and Livelihood
                     </button>
                     <button 
-                      onClick={() => setActiveTab('environment')}
+                      onClick={() => setActiveTab('Research and Data Science')}
+                      className={`py-2 px-4 text-sm font-medium ${
+                        activeTab === 'Research and Data Science' 
+                          ? 'bg-primary text-white' 
+                          : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100'
+                      }`}
+                    >
+                      Research and Data Science
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('Biodiversity and Eco Care')}
                       className={`py-2 px-4 text-sm font-medium rounded-r-lg ${
-                        activeTab === 'environment' 
+                        activeTab === 'Biodiversity and Eco Care' 
                           ? 'bg-primary text-white' 
                           : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100'
                       }`}
                     >
-                      Environment
+                      Biodiversity and Eco Care
                     </button>
                   </div>
                 </div>
@@ -170,44 +185,44 @@ const Causes: React.FC = () => {
                       All Projects
                     </button>
                     <button 
-                      onClick={() => setActiveTab('Health')}
+                      onClick={() => setActiveTab('Healthcare and Well being')}
                       className={`py-2 px-4 text-sm font-medium ${
-                        activeTab === 'Health' 
+                        activeTab === 'Healthcare and Well being' 
                           ? 'bg-primary text-white' 
                           : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100'
                       }`}
                     >
-                      Health
+                      Healthcare and Well being
                     </button>
                     <button 
-                      onClick={() => setActiveTab('Education')}
+                      onClick={() => setActiveTab('Education and Livelihood')}
                       className={`py-2 px-4 text-sm font-medium ${
-                        activeTab === 'Education' 
+                        activeTab === 'Education and Livelihood' 
                           ? 'bg-primary text-white' 
                           : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100'
                       }`}
                     >
-                      Education
+                      Education and Livelihood
                     </button>
                     <button 
-                      onClick={() => setActiveTab('Ecocare')}
+                      onClick={() => setActiveTab('Research and Data Science')}
                       className={`py-2 px-4 text-sm font-medium ${
-                        activeTab === 'Ecocare' 
+                        activeTab === 'Research and Data Science' 
                           ? 'bg-primary text-white' 
                           : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100'
                       }`}
                     >
-                      Ecocare
+                      Research and Data Science
                     </button>
                     <button 
-                      onClick={() => setActiveTab('Research')}
+                      onClick={() => setActiveTab('Biodiversity and Eco Care')}
                       className={`py-2 px-4 text-sm font-medium rounded-r-lg ${
-                        activeTab === 'Research' 
+                        activeTab === 'Biodiversity and Eco Care' 
                           ? 'bg-primary text-white' 
                           : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-100'
                       }`}
                     >
-                      Research
+                      Biodiversity and Eco Care
                     </button>
                   </div>
                 </div>
@@ -261,38 +276,66 @@ const Causes: React.FC = () => {
             
             <div className="space-y-4">
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-montserrat font-semibold mb-2">How are donations used?</h3>
-                <p className="text-gray-700">
-                  Your donations go directly to the specific cause you choose to support. A small 
-                  percentage (not exceeding 10%) goes toward administrative costs to ensure effective 
-                  program management and impact assessment.
-                </p>
+                <h3 
+                  className="text-lg font-montserrat font-semibold mb-2 cursor-pointer"
+                  onClick={() => toggleFAQ('donations')}
+                >
+                  How are donations used?
+                </h3>
+                {openFAQ === 'donations' && (
+                  <p className="text-gray-700">
+                    Your donations go directly to the specific cause you choose to support. A small 
+                    percentage (not exceeding 10%) goes toward administrative costs to ensure effective 
+                    program management and impact assessment.
+                  </p>
+                )}
               </div>
               
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-montserrat font-semibold mb-2">Are donations tax-deductible?</h3>
-                <p className="text-gray-700">
-                  Yes, all donations to Supansha Development Foundation are eligible for tax deductions 
-                  under Section 80G of the Indian Income Tax Act. We provide donation receipts that can 
-                  be used for tax filing purposes.
-                </p>
+                <h3 
+                  className="text-lg font-montserrat font-semibold mb-2 cursor-pointer"
+                  onClick={() => toggleFAQ('tax')}
+                >
+                  Are donations tax-deductible?
+                </h3>
+                {openFAQ === 'tax' && (
+                  <p className="text-gray-700">
+                    Yes, all donations to Supansha Development Foundation are eligible for tax deductions 
+                    under Section 80G of the Indian Income Tax Act. We provide donation receipts that can 
+                    be used for tax filing purposes.
+                  </p>
+                )}
               </div>
               
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-montserrat font-semibold mb-2">Can I donate to a specific project?</h3>
-                <p className="text-gray-700">
-                  Absolutely! You can choose a specific project or cause to support. When making your 
-                  donation, simply select the project you want to contribute to from the dropdown menu.
-                </p>
+                <h3 
+                  className="text-lg font-montserrat font-semibold mb-2 cursor-pointer"
+                  onClick={() => toggleFAQ('specificProject')}
+                >
+                  Can I donate to a specific project?
+                </h3>
+                {openFAQ === 'specificProject' && (
+                  <p className="text-gray-700">
+                    Absolutely! You can choose a specific project or cause to support. When making your 
+                    donation, simply select the project you want to contribute to from the dropdown menu.
+                  </p>
+                )}
               </div>
               
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-montserrat font-semibold mb-2">How do I know my donation is making an impact?</h3>
-                <p className="text-gray-700">
-                  We regularly share impact reports, success stories, and project updates on our website 
-                  and through email newsletters. Donors receive updates on the specific projects they've 
-                  supported so they can see firsthand how their contributions are making a difference.
-                </p>
+                <h3 
+                  className="text-lg font-montserrat font-semibold mb-2 cursor-pointer"
+                  onClick={() => toggleFAQ('impact')}
+                >
+                  How do I know my donation is making an impact?
+                </h3>
+                {openFAQ === 'impact' && (
+                  <p className="text-gray-700">
+                    We regularly share impact reports, success stories, and project updates on our website 
+                    and through email newsletters. Donors receive updates on the specific projects they've 
+                    supported so they can see firsthand how their contributions are making a difference.
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -307,7 +350,7 @@ const Causes: React.FC = () => {
               <a href="/donate" className="bg-primary hover:bg-[#F14B05]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
                 Donate Now
               </a>
-              <a href="/volunteer" className="bg-secondary hover:bg-secondary/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
+              <a href="/volunteer" className="bg-[#F57C00]  hover:bg-[#F14B05]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
                 Become a Volunteer
               </a>
             </div>

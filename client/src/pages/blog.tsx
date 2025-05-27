@@ -171,7 +171,7 @@ const Blog: React.FC = () => {
             <a href="/donate" className="bg-primary hover:bg-[#F14B05]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
               Donate Now
             </a>
-            <a href="/volunteer" className="bg-secondary hover:bg-secondary/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
+            <a href="/volunteer" className="bg-[#F57C00] hover:bg-[#F14B05]/90 text-white px-8 py-3 rounded-md font-medium transition-colors">
               Become a Volunteer
             </a>
           </div>

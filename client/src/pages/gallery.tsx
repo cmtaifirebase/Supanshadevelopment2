@@ -38,75 +38,74 @@ const GalleryContent: React.FC = () => {
     },
   })
 
-  // Local gallery items
+  // Local gallery items with new categories
   const localGalleryItems: GalleryImage[] = [
     {
       id: 101,
       image: "/Gallery/1.jpg",
       caption: "Community Development",
-      category: "Community",
-      eventName: "Community Outreach",
-      projectName: "Village Development",
-      domainName: "Rural Development",
+      category: "Healthcare and Well being",
+      eventName: "Healthcare Initiative",
+      projectName: "Community Health",
+      domainName: "Healthcare",
     },
     {
       id: 102,
       image: "/Gallery/2.jpg",
       caption: "Education Initiative",
-      category: "Education",
-      eventName: "School Program",
-      projectName: "Education for All",
-      domainName: "Child Education",
+      category: "Education and Livelihood",
+      eventName: "Education Program",
+      projectName: "Skill Development",
+      domainName: "Education",
     },
     {
       id: 103,
       image: "/Gallery/3.jpg",
-      caption: "Health Camp",
-      category: "Health",
+      caption: "Research Initiative",
+      category: "Research and Data Science",
+      eventName: "Research Program",
+      projectName: "Data Analysis",
+      domainName: "Research",
+    },
+    {
+      id: 104,
+      image: "/Gallery/4.jpg",
+      caption: "Environmental Care",
+      category: "Biodiversity and Eco Care",
+      eventName: "Eco Initiative",
+      projectName: "Green Earth",
+      domainName: "Environment",
+    },
+    {
+      id: 105,
+      image: "/Gallery/5.jpg",
+      caption: "Healthcare Camp",
+      category: "Healthcare and Well being",
       eventName: "Medical Camp",
       projectName: "Rural Health",
       domainName: "Healthcare",
     },
     {
-      id: 104,
-      image: "/Gallery/4.jpg",
-      caption: "Women Empowerment",
-      category: "Empowerment",
-      eventName: "Women's Workshop",
-      projectName: "Skill Development",
-      domainName: "Gender Equality",
-    },
-    {
-      id: 105,
-      image: "/Gallery/5.jpg",
-      caption: "Environmental Care",
-      category: "Ecocare",
-      eventName: "Tree Plantation",
-      projectName: "Green Earth",
-      domainName: "Environment",
-    },
-    {
       id: 106,
       image: "/Gallery/6.jpg",
-      caption: "Water Conservation",
-      category: "Water",
-      eventName: "Water Project",
-      projectName: "Clean Water Initiative",
-      domainName: "Water Resources",
+      caption: "Education Workshop",
+      category: "Education and Livelihood",
+      eventName: "Skill Workshop",
+      projectName: "Career Development",
+      domainName: "Education",
     },
   ]
 
   // Combine both sets of images
   const allGalleryItems = [...(apiGalleryItems || []), ...localGalleryItems]
 
+  // Update the categories array
   const categories = [
     { id: "all", name: "All" },
-    { id: "Health", name: "Health" },
-    { id: "Education", name: "Education" },
-    { id: "Community", name: "Community" },
-    { id: "Empowerment", name: "Empowerment" },
-    { id: "Ecocare", name: "Ecocare" },
-    { id: "Water", name: "Water" },
+    { id: "Healthcare and Well being", name: "Healthcare and Well being" },
+    { id: "Education and Livelihood", name: "Education and Livelihood" },
+    { id: "Research and Data Science", name: "Research and Data Science" },
+    { id: "Biodiversity and Eco Care", name: "Biodiversity and Eco Care" },
   ]
 
   const filteredGallery =
