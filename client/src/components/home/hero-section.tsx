@@ -6,7 +6,7 @@ const HeroSection: React.FC = () => {
     <section className="relative h-[600px] sm:h-[550px] lg:h-[650px]">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('home/banner.jpg')` }}
+        style={{ backgroundImage: `url('home/banner1.jpg')` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
       </div>

@@ -74,7 +74,7 @@ const Header = () => {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img src="logo1.png" alt="Supansha Development Foundation" className="h-12 mr-2" />
+            <img src="/logo/logo2.png" alt="Supansha Development Foundation" className="h-16 mr-4" />
           </Link>
 
           {/* Desktop Navigation */}
