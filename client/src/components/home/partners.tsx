@@ -1,10 +1,11 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Partner } from '@/lib/types';
+import { API_BASE_URL } from '@/config';
 
 const Partners: React.FC = () => {
   const { data: partners, isLoading } = useQuery<Partner[]>({
-    queryKey: ['/api/partners'],
+    queryKey: [`$(API_BASE_URL)/api/partners`],
   });
 
   return (

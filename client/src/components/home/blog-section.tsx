@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import BlogCard from '@/components/shared/blog-card';
+import { API_BASE_URL } from '@/config';
 
 interface BlogPost {
   _id: string;
@@ -20,7 +21,7 @@ interface BlogPost {
 
 const BlogSection: React.FC = () => {
   const { data: blogPosts, isLoading } = useQuery<BlogPost[]>({
-    queryKey: ['/api/blog'],
+    queryKey: [`$(API_BASE_URL)/api/blogs`],
     select: (data) => data.slice(0, 3), // Take only the first 3 items
   });
 
