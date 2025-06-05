@@ -39,12 +39,23 @@ const ContactForm: React.FC = () => {
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
     try {
+      // Get the authentication token
+      const token = localStorage.getItem('authToken'); // Or however you store your token
+      
       const response = await fetch(`${API_BASE_URL}/api/contact`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Add token for authentication
+        },
+        credentials: 'include', // Keep if cookies are also used for session management
         body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit contact form');
+      }
+      
       const result = await response.json();
       if (response.ok) {
         toast({
@@ -60,6 +71,7 @@ const ContactForm: React.FC = () => {
         });
       }
     } catch (error) {
+      console.error('Error submitting contact form:', error);
       toast({
         title: 'Submission Failed',
         description: 'There was an error sending your message. Please try again.',

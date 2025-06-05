@@ -129,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         }`}>
           {shouldShowFull && (
             <div className="flex items-center space-x-2">
-              <img src="/logo.png" alt="Logo" className="w-8 h-8" />
+              <img src="/logo/logo1.png" alt="Logo" className="w-8 h-8" />
               <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
             </div>
           )}

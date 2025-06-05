@@ -100,7 +100,7 @@ function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-200 via-orange-100 to-cream-50">
       <div className="w-full max-w-md mx-auto p-8 bg-white rounded-2xl shadow-xl animate-fadeIn">
         <div className="flex flex-col items-center mb-6">
-          <img src="/logo/.png" alt="NGO Logo" className="h-14 mb-2" />
+          <img src="/logo/logo2.png" alt="NGO Logo" className="h-14 mb-2" />
           <span className="text-orange-600 font-semibold text-lg">Empowering Local to Global Impact</span>
         </div>
 
@@ -131,14 +131,14 @@ function Login() {
 
           {error && <p className="text-red-500 text-sm">{(error as Error).message}</p>}
 
-          <div className="flex items-center justify-between space-x-2">
+          {/* <div className="flex items-center justify-between space-x-2">
             <button type="button" className="flex-1 flex items-center justify-center py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition">
               <img src="/google-icon.svg" alt="Google" className="h-5 w-5 mr-2" /> Google
             </button>
             <button type="button" className="flex-1 flex items-center justify-center py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition">
               <img src="/facebook-icon.svg" alt="Facebook" className="h-5 w-5 mr-2" /> Facebook
             </button>
-          </div>
+          </div> */}
         </form>
 
         <div className="flex flex-col items-center mt-6 space-y-2 text-sm">

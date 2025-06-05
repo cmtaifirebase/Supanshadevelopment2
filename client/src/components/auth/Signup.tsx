@@ -91,7 +91,7 @@ function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-200 via-orange-100 to-cream-50">
       <div className="w-full max-w-md mx-auto p-8 bg-white rounded-2xl shadow-xl animate-fadeIn">
         <div className="flex flex-col items-center mb-6">
-          <img src="/logo.png" alt="NGO Logo" className="h-14 mb-2" />
+          <img src="logo/logo1.png" alt="NGO Logo" className="h-14 mb-2" />
           <span className="text-orange-600 font-semibold text-lg">Join the Movement — Sign Up</span>
         </div>
 
